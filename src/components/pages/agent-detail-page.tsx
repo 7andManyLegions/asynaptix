@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { SecurityBadge } from '../common/security-badge';
-import { ArrowLeft, Edit, Share2 } from 'lucide-react';
+import { ArrowLeft, Edit, Share2, Play } from 'lucide-react';
 import Link from 'next/link';
 
 interface AgentDetailPageProps {
@@ -59,8 +59,11 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps) {
         </CardHeader>
         <CardContent>
             <div className="flex gap-2 mt-4">
-                <Button>
-                    Use Agent
+                <Button asChild>
+                    <Link href={`/agent/${agent.id}/run`}>
+                        <Play className="mr-2 h-4 w-4"/>
+                        Use Agent
+                    </Link>
                 </Button>
                  <Button variant="outline">
                     <Share2 className="mr-2 h-4 w-4"/>
@@ -105,4 +108,3 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps) {
     </div>
   );
 }
-
