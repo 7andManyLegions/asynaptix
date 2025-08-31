@@ -130,6 +130,3 @@ export const tools: Tool[] = [
     category: "Community",
   }
 ];
-
-// This is deprecated and will be removed. Use useAgents() hook instead.
-export const agents = initialAgents;
