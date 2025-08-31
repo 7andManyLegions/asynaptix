@@ -1,11 +1,22 @@
 "use client";
 
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { agents } from '@/lib/data';
-import { Link2, Wand2, Loader2, ArrowRight, Code, Info } from 'lucide-react';
+import { agents, Agent } from '@/lib/data';
+import { Link2, Wand2, Loader2, ArrowRight, Code, Info, Copy, Bot, Package } from 'lucide-react';
 import { agentLinkingAssistance } from '@/ai/flows/agent-linking-assistance';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -23,6 +34,25 @@ export default function AgentLinkingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AssistanceResult>(null);
   const { toast } = useToast();
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newAgentName, setNewAgentName] = useState('');
+  const [newAgentDescription, setNewAgentDescription] = useState('');
+
+  useEffect(() => {
+    const savedState = sessionStorage.getItem('agentLinkingState');
+    if (savedState) {
+      const { agent1Id, agent2Id, result } = JSON.parse(savedState);
+      setAgent1Id(agent1Id);
+      setAgent2Id(agent2Id);
+      setResult(result);
+    }
+  }, []);
+
+  useEffect(() => {
+    const stateToSave = { agent1Id, agent2Id, result };
+    sessionStorage.setItem('agentLinkingState', JSON.stringify(stateToSave));
+  }, [agent1Id, agent2Id, result]);
 
   const handleSuggestLink = async () => {
     if (!agent1Id || !agent2Id) {
@@ -65,6 +95,8 @@ export default function AgentLinkingPage() {
         agent2Description: `Name: ${agent2.name}, Description: ${agent2.description}`,
       });
       setResult(response);
+      setNewAgentName(`${agent1.name} + ${agent2.name}`);
+      setNewAgentDescription(`An agent that combines the functionality of "${agent1.name}" and "${agent2.name}".`);
     } catch (error) {
       console.error('Error getting linking assistance:', error);
       toast({
@@ -76,6 +108,28 @@ export default function AgentLinkingPage() {
       setIsLoading(false);
     }
   };
+
+  const handleCopyCode = () => {
+    if (result?.generatedCode) {
+      navigator.clipboard.writeText(result.generatedCode);
+      toast({
+        title: 'Code Copied',
+        description: 'The generated linking code has been copied to your clipboard.',
+      });
+    }
+  };
+
+  const handleAutoCreateAgent = () => {
+    // In a real app, this would trigger a backend process to create the agent
+    toast({
+        title: "Agent Packaged!",
+        description: `Your new agent "${newAgentName}" has been created and is ready to be used.`,
+    });
+    setIsDialogOpen(false);
+  };
+  
+  const agent1 = agents.find(a => a.id === agent1Id);
+  const agent2 = agents.find(a => a.id === agent2Id);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -93,7 +147,7 @@ export default function AgentLinkingPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <Select onValueChange={setAgent1Id}>
+            <Select onValueChange={setAgent1Id} value={agent1Id || undefined}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Agent 1" />
               </SelectTrigger>
@@ -104,7 +158,7 @@ export default function AgentLinkingPage() {
               </SelectContent>
             </Select>
 
-             <Select onValueChange={setAgent2Id}>
+             <Select onValueChange={setAgent2Id} value={agent2Id || undefined}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Agent 2" />
               </SelectTrigger>
@@ -154,8 +208,12 @@ export default function AgentLinkingPage() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
+            <CardHeader className="flex justify-between items-center">
               <CardTitle>Generated Linking Code</CardTitle>
+              <Button variant="ghost" size="icon" onClick={handleCopyCode}>
+                <Copy className="h-4 w-4" />
+                <span className="sr-only">Copy code</span>
+              </Button>
             </CardHeader>
             <CardContent>
               <pre className="bg-muted p-4 rounded-md overflow-x-auto">
@@ -166,26 +224,94 @@ export default function AgentLinkingPage() {
            <Card>
             <CardHeader className="flex-row items-center gap-4 space-y-0">
                 <Info className="h-6 w-6 text-primary"/>
-                <CardTitle>How to Use This Code</CardTitle>
+                <CardTitle>Next Steps</CardTitle>
             </CardHeader>
-            <CardContent className="prose dark:prose-invert max-w-none">
+            <CardContent className="prose dark:prose-invert max-w-none space-y-4">
                 <p>
-                    Two linked agents create a new, more powerful agent. To use the code above:
+                    You have two options to create your new, combined agent.
                 </p>
-                <ol>
-                    <li>
-                        Go to the <Link href="/build">Agent Builder</Link>.
-                    </li>
-                    <li>
-                        Give your new combined agent a name and description. For example, &quot;Research and Summarize Agent&quot;.
-                    </li>
-                    <li>
-                        Copy the code from the &quot;Generated Linking Code&quot; card and paste it into the &quot;Agent Logic / Orchestration&quot; text area.
-                    </li>
-                    <li>
-                        Package your new agent!
-                    </li>
-                </ol>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <Card className="flex-1 p-4">
+                        <h4 className="font-semibold mb-2">Option 1: Auto Create</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                           Let us create and package the agent for you with one click.
+                        </p>
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                            <DialogTrigger asChild>
+                                <Button className="w-full"><Bot className="mr-2 h-4 w-4"/> Auto Create Agent</Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                <DialogTitle>Create New Linked Agent</DialogTitle>
+                                <DialogDescription>
+                                    Confirm the details for your new agent. You can adjust the underlying models for each of the original agents.
+                                </DialogDescription>
+                                </DialogHeader>
+                                <div className="space-y-4 py-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="new-agent-name">Agent Name</Label>
+                                        <Input id="new-agent-name" value={newAgentName} onChange={(e) => setNewAgentName(e.target.value)} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="new-agent-desc">Description</Label>
+                                        <Input id="new-agent-desc" value={newAgentDescription} onChange={(e) => setNewAgentDescription(e.target.value)} />
+                                    </div>
+                                    <Card>
+                                        <CardHeader className="p-4">
+                                            <CardTitle className="text-base">{agent1?.name}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-4 pt-0">
+                                            <Label>Model</Label>
+                                             <Select defaultValue="gemini-2.5-flash">
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash</SelectItem>
+                                                    <SelectItem value="openai">OpenAI GPT-4</SelectItem>
+                                                    <SelectItem value="local">Local Llama3</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </CardContent>
+                                    </Card>
+                                     <Card>
+                                        <CardHeader className="p-4">
+                                            <CardTitle className="text-base">{agent2?.name}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-4 pt-0">
+                                            <Label>Model</Label>
+                                             <Select defaultValue="gemini-2.5-flash">
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash</SelectItem>
+                                                    <SelectItem value="openai">OpenAI GPT-4</SelectItem>
+                                                    <SelectItem value="local">Local Llama3</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                                <DialogFooter>
+                                <Button onClick={handleAutoCreateAgent}><Package className="mr-2 h-4 w-4"/> Create and Package</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </Card>
+                    <Card className="flex-1 p-4">
+                         <h4 className="font-semibold mb-2">Option 2: Manual Setup</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                           Copy the code and use it in the Agent Builder for more control.
+                        </p>
+                        <Button variant="outline" className="w-full" asChild>
+                            <Link href="/build">
+                                <ArrowRight className="mr-2 h-4 w-4"/>
+                                Go to Agent Builder
+                            </Link>
+                        </Button>
+                    </Card>
+                </div>
             </CardContent>
           </Card>
         </div>
