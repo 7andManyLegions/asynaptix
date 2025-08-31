@@ -33,12 +33,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           <SidebarNav />
         </SidebarContent>
         <SidebarFooter className="p-2 flex flex-col gap-4">
-           <Button variant="outline" asChild>
-            <Link href="/build">
-                <Wrench className="mr-2 h-4 w-4"/>
-                New Agent
-            </Link>
-           </Button>
             <SidebarMenu>
                 <SidebarMenuItem>
                     <Link href="/getting-started" passHref>
