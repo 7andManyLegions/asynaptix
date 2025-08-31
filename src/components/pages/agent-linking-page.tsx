@@ -34,7 +34,7 @@ export default function AgentLinkingPage() {
   const [agent1Id, setAgent1Id] = useState<string | undefined>(undefined);
   const [agent2Id, setAgent2Id] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<AssistanceResult>(null);
+  const [setResult] = useState<AssistanceResult>(null);
   const { toast } = useToast();
   const router = useRouter();
   const { agents, addAgent } = useAgents();
@@ -43,6 +43,7 @@ export default function AgentLinkingPage() {
   const [newAgentName, setNewAgentName] = useState('');
   const [newAgentDescription, setNewAgentDescription] = useState('');
   const [isPackaging, setIsPackaging] = useState(false);
+  const [result, setLinkingResult] = useState<AssistanceResult>(null);
 
   useEffect(() => {
     const savedState = sessionStorage.getItem('agentLinkingState');
@@ -51,7 +52,7 @@ export default function AgentLinkingPage() {
         const { agent1Id, agent2Id, result } = JSON.parse(savedState);
         setAgent1Id(agent1Id);
         setAgent2Id(agent2Id);
-        setResult(result);
+        setLinkingResult(result);
       } catch (e) {
           console.error("Could not parse agent linking state", e);
           sessionStorage.removeItem('agentLinkingState');
@@ -88,7 +89,7 @@ export default function AgentLinkingPage() {
     }
 
     setIsLoading(true);
-    setResult(null);
+    setLinkingResult(null);
 
     const agent1 = agents.find(a => a.id === agent1Id);
     const agent2 = agents.find(a => a.id === agent2Id);
@@ -108,7 +109,7 @@ export default function AgentLinkingPage() {
         agent1Description: `Name: ${agent1.name}, Description: ${agent1.description}`,
         agent2Description: `Name: ${agent2.name}, Description: ${agent2.description}`,
       });
-      setResult(response);
+      setLinkingResult(response);
       setNewAgentName(`${agent1.name} + ${agent2.name}`);
       setNewAgentDescription(`An agent that combines the functionality of "${agent1.name}" and "${agent2.name}".`);
     } catch (error) {
@@ -318,7 +319,7 @@ export default function AgentLinkingPage() {
                                              <Select defaultValue="gemini-2.5-flash">
                                                 <SelectTrigger>
                                                     <SelectValue />
-                                                </S
+                                                </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash</SelectItem>
                                                     <SelectItem value="openai">OpenAI GPT-4</SelectItem>
@@ -357,3 +358,5 @@ export default function AgentLinkingPage() {
     </div>
   );
 }
+
+    
