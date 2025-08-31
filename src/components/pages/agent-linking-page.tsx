@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -30,8 +31,8 @@ type AssistanceResult = {
 } | null;
 
 export default function AgentLinkingPage() {
-  const [agent1Id, setAgent1Id] = useState<string | null>(null);
-  const [agent2Id, setAgent2Id] = useState<string | null>(null);
+  const [agent1Id, setAgent1Id] = useState<string | undefined>(undefined);
+  const [agent2Id, setAgent2Id] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AssistanceResult>(null);
   const { toast } = useToast();
@@ -45,16 +46,25 @@ export default function AgentLinkingPage() {
   useEffect(() => {
     const savedState = sessionStorage.getItem('agentLinkingState');
     if (savedState) {
-      const { agent1Id, agent2Id, result } = JSON.parse(savedState);
-      setAgent1Id(agent1Id);
-      setAgent2Id(agent2Id);
-      setResult(result);
+      try {
+        const { agent1Id, agent2Id, result } = JSON.parse(savedState);
+        setAgent1Id(agent1Id);
+        setAgent2Id(agent2Id);
+        setResult(result);
+      } catch (e) {
+          console.error("Could not parse agent linking state", e);
+          sessionStorage.removeItem('agentLinkingState');
+      }
     }
   }, []);
 
   useEffect(() => {
-    const stateToSave = { agent1Id, agent2Id, result };
-    sessionStorage.setItem('agentLinkingState', JSON.stringify(stateToSave));
+    // Prevent saving if both agents are not selected.
+    // This avoids clearing state on reload when nothing is selected.
+    if(agent1Id || agent2Id || result) {
+      const stateToSave = { agent1Id, agent2Id, result };
+      sessionStorage.setItem('agentLinkingState', JSON.stringify(stateToSave));
+    }
   }, [agent1Id, agent2Id, result]);
 
   const handleSuggestLink = async () => {
@@ -170,7 +180,7 @@ export default function AgentLinkingPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <Select onValueChange={setAgent1Id} value={agent1Id || undefined}>
+            <Select onValueChange={(value) => setAgent1Id(value === "" ? undefined : value)} value={agent1Id}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Agent 1" />
               </SelectTrigger>
@@ -181,7 +191,7 @@ export default function AgentLinkingPage() {
               </SelectContent>
             </Select>
 
-             <Select onValueChange={setAgent2Id} value={agent2Id || undefined}>
+             <Select onValueChange={(value) => setAgent2Id(value === "" ? undefined : value)} value={agent2Id}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Agent 2" />
               </SelectTrigger>
@@ -342,3 +352,4 @@ export default function AgentLinkingPage() {
     </div>
   );
 }
+
