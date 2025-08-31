@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -13,9 +14,10 @@ import {
 } from '@/components/ui/sidebar';
 import { SidebarNav } from './sidebar-nav';
 import { AppHeader } from './header';
-import { Bot, Wrench, Package, Shield, LayoutGrid } from 'lucide-react';
+import { Bot, Wrench, Package, Shield, LayoutGrid, LifeBuoy, BookOpen, ShieldCheck, Info } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '../ui/sidebar';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -30,13 +32,47 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         <SidebarContent>
           <SidebarNav />
         </SidebarContent>
-        <SidebarFooter className="p-4">
+        <SidebarFooter className="p-2 flex flex-col gap-4">
            <Button variant="outline" asChild>
             <Link href="/build">
                 <Wrench className="mr-2 h-4 w-4"/>
                 New Agent
             </Link>
            </Button>
+            <SidebarMenu>
+                <SidebarMenuItem>
+                    <Link href="/getting-started" passHref>
+                        <SidebarMenuButton size="sm" tooltip="Getting Started">
+                            <LifeBuoy />
+                            <span>Getting Started</span>
+                        </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <Link href="#" passHref>
+                        <SidebarMenuButton size="sm" tooltip="Resources">
+                            <BookOpen />
+                            <span>Resources</span>
+                        </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <Link href="#" passHref>
+                        <SidebarMenuButton size="sm" tooltip="Policies">
+                            <ShieldCheck />
+                            <span>Policies</span>
+                        </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <Link href="#" passHref>
+                        <SidebarMenuButton size="sm" tooltip="About Us">
+                            <Info />
+                            <span>About Us</span>
+                        </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+            </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
       <SidebarRail />
