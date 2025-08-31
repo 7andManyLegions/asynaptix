@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Agent } from '@/lib/data';
@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  DialogDescription as DialogDescriptionComponent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -149,9 +149,9 @@ export function AgentCard({ agent }: AgentCardProps) {
                     <DialogContent className="sm:max-w-[600px]">
                         <DialogHeader>
                         <DialogTitle>Publish {agent.name}</DialogTitle>
-                        <DialogDescription>
+                        <DialogDescriptionComponent>
                             Make your agent available in the marketplace. First, run a security scan, then choose a pricing model.
-                        </DialogDescription>
+                        </DialogDescriptionComponent>
                         </DialogHeader>
                         
                         <div className="py-4 space-y-6">
@@ -259,3 +259,5 @@ export function AgentCard({ agent }: AgentCardProps) {
     </Card>
   );
 }
+
+    
