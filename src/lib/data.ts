@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Calculator, Wrench, Search, Cloud, Database, BarChart, FileText, Bot } from "lucide-react";
+import { Calculator, Search, Cloud, Database, BarChart, FileText, Bot, CaseUpper } from "lucide-react";
 
 export type SecurityRating = "trusted" | "verified" | "scanned" | "none";
 
