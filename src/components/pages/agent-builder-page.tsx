@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { tools, type Tool } from '@/lib/data';
+import { useAgents } from '@/hooks/use-agents.tsx';
 import { ToolCard } from '../common/tool-card';
 import { Badge } from '../ui/badge';
 import { X, Wand2, Package, Save } from 'lucide-react';
@@ -21,6 +23,9 @@ export default function AgentBuilderPage() {
   const [selectedTools, setSelectedTools] = useState<Tool[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
+  const { addAgent } = useAgents();
+  const router = useRouter();
+
 
   const handleAddTool = (tool: Tool) => {
     if (!selectedTools.find(t => t.id === tool.id)) {
@@ -98,10 +103,25 @@ export default function AgentBuilderPage() {
       });
       return;
     }
+
+    const newAgent = {
+      id: agentName.toLowerCase().replace(/\s+/g, '-'),
+      name: agentName,
+      description: agentDescription,
+      price: "free" as const,
+      securityRating: "none" as const,
+      imageUrl: 'https://picsum.photos/600/400',
+      imageHint: 'abstract technology',
+      isUserCreated: true,
+    };
+    addAgent(newAgent);
+
     toast({
       title: 'Agent Packaged!',
       description: `The agent "${agentName}" has been packaged successfully.`,
     });
+
+    router.push('/my-agents');
   };
 
 

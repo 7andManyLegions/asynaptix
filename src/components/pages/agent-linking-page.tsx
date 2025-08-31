@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { agents, Agent } from '@/lib/data';
+import { useAgents, type Agent } from '@/hooks/use-agents.tsx';
 import { Link2, Wand2, Loader2, ArrowRight, Code, Info, Copy, Bot, Package } from 'lucide-react';
 import { agentLinkingAssistance } from '@/ai/flows/agent-linking-assistance';
 import { useToast } from '@/hooks/use-toast';
@@ -34,6 +35,8 @@ export default function AgentLinkingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AssistanceResult>(null);
   const { toast } = useToast();
+  const router = useRouter();
+  const { agents, addAgent } = useAgents();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newAgentName, setNewAgentName] = useState('');
@@ -120,12 +123,32 @@ export default function AgentLinkingPage() {
   };
 
   const handleAutoCreateAgent = () => {
-    // In a real app, this would trigger a backend process to create the agent
+    if (!newAgentName) {
+      toast({
+        variant: 'destructive',
+        title: 'Agent Name Required',
+        description: 'Please provide a name for your new agent.',
+      });
+      return;
+    }
+    const newAgent = {
+      id: newAgentName.toLowerCase().replace(/\s+/g, '-'),
+      name: newAgentName,
+      description: newAgentDescription,
+      price: "free" as const,
+      securityRating: "none" as const,
+      imageUrl: 'https://picsum.photos/600/400',
+      imageHint: 'abstract nodes',
+      isUserCreated: true,
+    };
+    addAgent(newAgent);
+
     toast({
         title: "Agent Packaged!",
         description: `Your new agent "${newAgentName}" has been created and is ready to be used.`,
     });
     setIsDialogOpen(false);
+    router.push('/my-agents');
   };
   
   const agent1 = agents.find(a => a.id === agent1Id);
@@ -208,7 +231,7 @@ export default function AgentLinkingPage() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="flex justify-between items-center">
+            <CardHeader className="flex justify-between items-center flex-row">
               <CardTitle>Generated Linking Code</CardTitle>
               <Button variant="ghost" size="icon" onClick={handleCopyCode}>
                 <Copy className="h-4 w-4" />

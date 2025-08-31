@@ -11,17 +11,18 @@ export interface Agent {
   price: "free" | "paid";
   imageUrl: string;
   imageHint: string;
+  isUserCreated?: boolean;
 }
 
 export interface Tool {
   id: string;
-  name: string;
+  name:string;
   description: string;
   icon: LucideIcon;
   category: "Baseline" | "Community" | "Premium";
 }
 
-export const agents: Agent[] = [
+export const initialAgents: Agent[] = [
   {
     id: "data-analyst",
     name: "Data Analyst Agent",
@@ -129,3 +130,6 @@ export const tools: Tool[] = [
     category: "Community",
   }
 ];
+
+// This is deprecated and will be removed. Use useAgents() hook instead.
+export const agents = initialAgents;

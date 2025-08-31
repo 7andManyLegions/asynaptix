@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from 'react';
-import { agents, type SecurityRating } from '@/lib/data';
+import { useAgents, type SecurityRating } from '@/hooks/use-agents.tsx';
 import { AgentCard } from '@/components/common/agent-card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -22,6 +22,7 @@ const priceFilters = [
 
 
 export default function HomePage() {
+  const { agents } = useAgents();
   const [securityRatings, setSecurityRatings] = useState<Set<SecurityRating>>(new Set());
   const [prices, setPrices] = useState<Set<string>>(new Set());
 
@@ -50,12 +51,13 @@ export default function HomePage() {
   };
 
   const filteredAgents = useMemo(() => {
-    return agents.filter(agent => {
+    const communityAgents = agents.filter(agent => !agent.isUserCreated);
+    return communityAgents.filter(agent => {
       const securityMatch = securityRatings.size === 0 || securityRatings.has(agent.securityRating);
       const priceMatch = prices.size === 0 || prices.has(agent.price);
       return securityMatch && priceMatch;
     });
-  }, [securityRatings, prices]);
+  }, [securityRatings, prices, agents]);
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">

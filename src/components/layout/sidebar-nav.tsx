@@ -7,13 +7,14 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { LayoutGrid, Wrench, Package, Link2, CaseUpper } from 'lucide-react';
+import { LayoutGrid, Wrench, Package, Link2, CaseUpper, FolderKanban } from 'lucide-react';
 
 const navItems = [
   { href: '/', label: 'Discover', icon: LayoutGrid },
   { href: '/marketplace', label: 'Tools & Plugins', icon: CaseUpper },
   { href: '/build', label: 'Agent Builder', icon: Wrench },
   { href: '/link-agents', label: 'Link Agents', icon: Link2 },
+  { href: '/my-agents', label: 'My Agents', icon: FolderKanban },
 ];
 
 export function SidebarNav() {
