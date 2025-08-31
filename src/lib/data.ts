@@ -94,6 +94,13 @@ export const tools: Tool[] = [
     category: "Baseline",
   },
   {
+    id: "langchain-integrator",
+    name: "Langchain Integrator",
+    description: "Integrate agents built with Langchain.",
+    icon: Bot,
+    category: "Community"
+  },
+  {
     id: "api-connector",
     name: "API Connector",
     description: "Connect to any third-party API to fetch or send data.",
@@ -106,13 +113,6 @@ export const tools: Tool[] = [
     description: "Allows agents to read data from connected SQL databases.",
     icon: Database,
     category: "Community",
-  },
-  {
-    id: "langchain-integrator",
-    name: "Langchain Integrator",
-    description: "Integrate agents built with Langchain.",
-    icon: Bot,
-    category: "Premium"
   },
   {
     id: "data-visualizer",

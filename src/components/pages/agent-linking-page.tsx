@@ -5,10 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { agents } from '@/lib/data';
-import { Link2, Wand2, Loader2, ArrowRight, Code } from 'lucide-react';
+import { Link2, Wand2, Loader2, ArrowRight, Code, Info } from 'lucide-react';
 import { agentLinkingAssistance } from '@/ai/flows/agent-linking-assistance';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import Link from 'next/link';
 
 type AssistanceResult = {
   suggestedConnectionPoints: string;
@@ -160,6 +161,31 @@ export default function AgentLinkingPage() {
               <pre className="bg-muted p-4 rounded-md overflow-x-auto">
                 <code className="font-mono text-sm">{result.generatedCode}</code>
               </pre>
+            </CardContent>
+          </Card>
+           <Card>
+            <CardHeader className="flex-row items-center gap-4 space-y-0">
+                <Info className="h-6 w-6 text-primary"/>
+                <CardTitle>How to Use This Code</CardTitle>
+            </CardHeader>
+            <CardContent className="prose dark:prose-invert max-w-none">
+                <p>
+                    Two linked agents create a new, more powerful agent. To use the code above:
+                </p>
+                <ol>
+                    <li>
+                        Go to the <Link href="/build">Agent Builder</Link>.
+                    </li>
+                    <li>
+                        Give your new combined agent a name and description. For example, &quot;Research and Summarize Agent&quot;.
+                    </li>
+                    <li>
+                        Copy the code from the &quot;Generated Linking Code&quot; card and paste it into the &quot;Agent Logic / Orchestration&quot; text area.
+                    </li>
+                    <li>
+                        Package your new agent!
+                    </li>
+                </ol>
             </CardContent>
           </Card>
         </div>

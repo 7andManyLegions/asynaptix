@@ -31,7 +31,7 @@ const AgentLinkingAssistanceOutputSchema = z.object({
   dataFlowValidation: z
     .string()
     .describe('An analysis of the data flow between the agents, including potential issues and how to resolve them.'),
-    generatedCode: z.string().describe('The generated code that links the two agents.'),
+    generatedCode: z.string().describe('The generated TypeScript code that links the two agents to form a new, single agent.'),
 });
 
 export type AgentLinkingAssistanceOutput = z.infer<typeof AgentLinkingAssistanceOutputSchema>;
@@ -44,13 +44,13 @@ const agentLinkingAssistancePrompt = ai.definePrompt({
   name: 'agentLinkingAssistancePrompt',
   input: {schema: AgentLinkingAssistanceInputSchema},
   output: {schema: AgentLinkingAssistanceOutputSchema},
-  prompt: `You are an Agent Linking Agent. Your job is to analyze two agents and determine how to link them so that they can work together.
+  prompt: `You are an Agent Linking Agent. Your job is to analyze two agents and create a new agent that orchestrates them.
   You will be given the descriptions, inputs, and outputs of two agents.
   Your task is to:
   1.  Determine the most logical way to connect them. Does Agent 1's output feed into Agent 2's input, or vice-versa?
   2.  Provide a clear explanation of the connection points.
   3.  Validate the data flow and highlight any potential mismatches or issues.
-  4.  Generate a code snippet (e.g., in TypeScript or Python) that demonstrates the orchestration, showing how to call the first agent, process its output, and pass it to the second agent.
+  4.  Generate a single, complete TypeScript code snippet for a new agent. This new agent should import and call the first agent, process its output, and then call the second agent with the result. The generated code should be a self-contained agent logic. Assume the two agents to be linked are available as functions 'agent1(input)' and 'agent2(input)'.
 
 Agent 1: {{{agent1Description}}}
 Agent 2: {{{agent2Description}}}`,
