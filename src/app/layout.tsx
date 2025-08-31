@@ -4,6 +4,7 @@ import { MainLayout } from '@/components/layout/main-layout';
 import { Toaster } from '@/components/ui/toaster';
 import { AgentsProvider } from '@/hooks/use-agents.tsx';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { AuthProvider } from '@/hooks/use-auth';
 
 
 export const metadata: Metadata = {
@@ -30,10 +31,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AgentsProvider>
-              <MainLayout>{children}</MainLayout>
-          </AgentsProvider>
-          <Toaster />
+          <AuthProvider>
+            <AgentsProvider>
+                <MainLayout>{children}</MainLayout>
+            </AgentsProvider>
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

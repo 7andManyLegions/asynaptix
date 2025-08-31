@@ -18,8 +18,17 @@ import { Bot, Wrench, Package, Shield, LayoutGrid, LifeBuoy, BookOpen, ShieldChe
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '../ui/sidebar';
+import { useAuth } from '@/hooks/use-auth';
+import { usePathname } from 'next/navigation';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  const pathname = usePathname();
+
+  if (pathname === '/login') {
+    return <main>{children}</main>;
+  }
+
   return (
     <SidebarProvider>
       <Sidebar>
