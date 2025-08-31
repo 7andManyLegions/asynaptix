@@ -74,6 +74,36 @@ export default function AgentBuilderPage() {
     }
   };
 
+  const handleSaveDraft = () => {
+    if (!agentName) {
+      toast({
+        variant: 'destructive',
+        title: 'Agent Name Required',
+        description: 'Please provide a name for your agent before saving.',
+      });
+      return;
+    }
+    toast({
+      title: 'Draft Saved!',
+      description: `Your agent "${agentName}" has been saved as a draft.`,
+    });
+  };
+
+  const handlePackageAgent = () => {
+    if (!agentName) {
+      toast({
+        variant: 'destructive',
+        title: 'Agent Name Required',
+        description: 'Please provide a name for your agent before packaging.',
+      });
+      return;
+    }
+    toast({
+      title: 'Agent Packaged!',
+      description: `The agent "${agentName}" has been packaged successfully.`,
+    });
+  };
+
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -123,8 +153,8 @@ export default function AgentBuilderPage() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
-             <Button variant="secondary"><Save className="mr-2 h-4 w-4"/> Save Draft</Button>
-             <Button><Package className="mr-2 h-4 w-4"/> Package Agent</Button>
+             <Button variant="secondary" onClick={handleSaveDraft}><Save className="mr-2 h-4 w-4"/> Save Draft</Button>
+             <Button onClick={handlePackageAgent}><Package className="mr-2 h-4 w-4"/> Package Agent</Button>
           </CardFooter>
         </Card>
       </div>
