@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -7,9 +8,11 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from 'next-themes';
 
 export default function SettingsPage() {
     const { toast } = useToast();
+    const { theme, setTheme } = useTheme();
 
     const handleSaveChanges = () => {
         toast({
@@ -58,7 +61,7 @@ export default function SettingsPage() {
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="theme-select">Theme</Label>
-                        <Select defaultValue="system">
+                        <Select value={theme} onValueChange={setTheme}>
                             <SelectTrigger id="theme-select">
                                 <SelectValue placeholder="Select theme" />
                             </SelectTrigger>

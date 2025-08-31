@@ -3,6 +3,7 @@ import './globals.css';
 import { MainLayout } from '@/components/layout/main-layout';
 import { Toaster } from '@/components/ui/toaster';
 import { AgentsProvider } from '@/hooks/use-agents.tsx';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 
 
 export const metadata: Metadata = {
@@ -23,10 +24,17 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <AgentsProvider>
-            <MainLayout>{children}</MainLayout>
-        </AgentsProvider>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AgentsProvider>
+              <MainLayout>{children}</MainLayout>
+          </AgentsProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
