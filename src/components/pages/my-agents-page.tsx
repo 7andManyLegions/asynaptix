@@ -6,7 +6,7 @@ import { useAgents } from '@/hooks/use-agents.tsx';
 import { AgentCard } from '@/components/common/agent-card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Plus, Upload } from 'lucide-react';
+import { Plus, Upload, Loader2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -20,19 +20,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from '../ui/skeleton';
 
 export default function MyAgentsPage() {
-  const { agents, addAgent } = useAgents();
+  const { agents, addAgent, loading } = useAgents();
   const { toast } = useToast();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [uploadAgentName, setUploadAgentName] = useState('');
   const [uploadAgentDescription, setUploadAgentDescription] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   const userAgents = useMemo(() => {
     return agents.filter(agent => agent.isUserCreated);
   }, [agents]);
 
-  const handleUploadAgent = () => {
+  const handleUploadAgent = async () => {
     if (!uploadAgentName || !uploadAgentDescription) {
       toast({
         variant: 'destructive',
@@ -41,7 +43,7 @@ export default function MyAgentsPage() {
       });
       return;
     }
-
+    setIsUploading(true);
     const newAgent = {
       id: uploadAgentName.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now(),
       name: uploadAgentName,
@@ -53,7 +55,8 @@ export default function MyAgentsPage() {
       isUserCreated: true,
     };
 
-    addAgent(newAgent);
+    await addAgent(newAgent);
+    setIsUploading(false);
 
     toast({
       title: 'Agent Uploaded!',
@@ -111,9 +114,9 @@ export default function MyAgentsPage() {
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setIsUploadDialogOpen(false)}>Cancel</Button>
-                  <Button onClick={handleUploadAgent}>
-                    <Upload className="mr-2 h-4 w-4"/>
-                    Add Agent
+                  <Button onClick={handleUploadAgent} disabled={isUploading}>
+                    {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Upload className="mr-2 h-4 w-4"/>}
+                    {isUploading ? 'Adding...' : 'Add Agent'}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -127,7 +130,17 @@ export default function MyAgentsPage() {
          </div>
       </div>
       
-      {userAgents.length > 0 ? (
+      {loading ? (
+         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="space-y-2">
+                    <Skeleton className="h-48 w-full" />
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                </div>
+            ))}
+        </div>
+      ) : userAgents.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {userAgents.map(agent => (
             <AgentCard key={agent.id} agent={agent} />

@@ -42,6 +42,7 @@ export default function AgentLinkingPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newAgentName, setNewAgentName] = useState('');
   const [newAgentDescription, setNewAgentDescription] = useState('');
+  const [isPackaging, setIsPackaging] = useState(false);
 
   useEffect(() => {
     const savedState = sessionStorage.getItem('agentLinkingState');
@@ -132,7 +133,7 @@ export default function AgentLinkingPage() {
     }
   };
 
-  const handleAutoCreateAgent = () => {
+  const handleAutoCreateAgent = async () => {
     if (!newAgentName) {
       toast({
         variant: 'destructive',
@@ -141,6 +142,7 @@ export default function AgentLinkingPage() {
       });
       return;
     }
+    setIsPackaging(true);
     const newAgent = {
       id: newAgentName.toLowerCase().replace(/\s+/g, '-'),
       name: newAgentName,
@@ -151,8 +153,8 @@ export default function AgentLinkingPage() {
       imageHint: 'abstract nodes',
       isUserCreated: true,
     };
-    addAgent(newAgent);
-
+    await addAgent(newAgent);
+    setIsPackaging(false);
     toast({
         title: "Agent Packaged!",
         description: `Your new agent "${newAgentName}" has been created and is ready to be used.`,
@@ -316,7 +318,7 @@ export default function AgentLinkingPage() {
                                              <Select defaultValue="gemini-2.5-flash">
                                                 <SelectTrigger>
                                                     <SelectValue />
-                                                </SelectTrigger>
+                                                </S
                                                 <SelectContent>
                                                     <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash</SelectItem>
                                                     <SelectItem value="openai">OpenAI GPT-4</SelectItem>
@@ -327,7 +329,10 @@ export default function AgentLinkingPage() {
                                     </Card>
                                 </div>
                                 <DialogFooter>
-                                <Button onClick={handleAutoCreateAgent}><Package className="mr-2 h-4 w-4"/> Create and Package</Button>
+                                <Button onClick={handleAutoCreateAgent} disabled={isPackaging}>
+                                  {isPackaging ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Package className="mr-2 h-4 w-4"/>}
+                                  {isPackaging ? 'Packaging...' : 'Create and Package'}
+                                </Button>
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
@@ -352,4 +357,3 @@ export default function AgentLinkingPage() {
     </div>
   );
 }
-

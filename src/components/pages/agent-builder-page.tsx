@@ -12,7 +12,7 @@ import { tools, type Tool } from '@/lib/data';
 import { useAgents } from '@/hooks/use-agents.tsx';
 import { ToolCard } from '../common/tool-card';
 import { Badge } from '../ui/badge';
-import { X, Wand2, Package, Save, KeyRound, Code, SlidersHorizontal, BrainCircuit } from 'lucide-react';
+import { X, Wand2, Package, Save, KeyRound, Code, SlidersHorizontal, BrainCircuit, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { agentCreationAssistant } from '@/ai/flows/agent-creation-assistant';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -62,6 +62,7 @@ export default function AgentBuilderPage() {
   const [temperature, setTemperature] = useState([0.5]);
   const [topK, setTopK] = useState([20]);
   const [topP, setTopP] = useState([0.8]);
+  const [isPackaging, setIsPackaging] = useState(false);
 
   useEffect(() => {
     // Load keys from localStorage on mount
@@ -193,7 +194,7 @@ export default function AgentBuilderPage() {
     });
   };
 
-  const handlePackageAgent = () => {
+  const handlePackageAgent = async () => {
     if (!agentName) {
       toast({
         variant: 'destructive',
@@ -202,6 +203,8 @@ export default function AgentBuilderPage() {
       });
       return;
     }
+
+    setIsPackaging(true);
 
     const newAgent = {
       id: agentName.toLowerCase().replace(/\s+/g, '-'),
@@ -213,8 +216,10 @@ export default function AgentBuilderPage() {
       imageHint: 'abstract technology',
       isUserCreated: true,
     };
-    addAgent(newAgent);
+    await addAgent(newAgent);
 
+    setIsPackaging(false);
+    
     toast({
       title: 'Agent Packaged!',
       description: `The agent "${agentName}" has been packaged successfully.`,
@@ -329,7 +334,10 @@ export default function AgentBuilderPage() {
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
              <Button variant="secondary" onClick={handleSaveDraft}><Save className="mr-2 h-4 w-4"/> Save Draft</Button>
-             <Button onClick={handlePackageAgent}><Package className="mr-2 h-4 w-4"/> Package Agent</Button>
+             <Button onClick={handlePackageAgent} disabled={isPackaging}>
+                {isPackaging ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Package className="mr-2 h-4 w-4"/>}
+                {isPackaging ? 'Packaging...' : 'Package Agent'}
+            </Button>
           </CardFooter>
         </Card>
       </div>
@@ -438,6 +446,3 @@ export default function AgentBuilderPage() {
     </div>
   );
 }
-
-
-    
