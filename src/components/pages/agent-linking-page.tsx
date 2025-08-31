@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { agents } from '@/lib/data';
-import { Link2, Wand2, Loader2, ArrowRight } from 'lucide-react';
+import { Link2, Wand2, Loader2, ArrowRight, Code } from 'lucide-react';
 import { agentLinkingAssistance } from '@/ai/flows/agent-linking-assistance';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -13,6 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 type AssistanceResult = {
   suggestedConnectionPoints: string;
   dataFlowValidation: string;
+  generatedCode: string;
 } | null;
 
 export default function AgentLinkingPage() {
@@ -149,6 +150,16 @@ export default function AgentLinkingPage() {
             </CardHeader>
             <CardContent className="prose dark:prose-invert max-w-none">
               <p>{result.dataFlowValidation}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Generated Linking Code</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                <code className="font-mono text-sm">{result.generatedCode}</code>
+              </pre>
             </CardContent>
           </Card>
         </div>
