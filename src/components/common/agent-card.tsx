@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,7 @@ import { assessAgentSecurity, type AssessAgentSecurityOutput } from '@/ai/flows/
 import { Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { useAgents } from '@/hooks/use-agents';
+import Link from 'next/link';
 
 interface AgentCardProps {
   agent: Agent;
@@ -251,13 +253,13 @@ export function AgentCard({ agent }: AgentCardProps) {
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
         <Badge variant={agent.price === 'free' ? 'secondary' : 'outline'}>{agent.price === 'free' ? 'Free' : 'Paid'}</Badge>
-        <Button variant="ghost" size="sm">
-          View
-          <ArrowRight className="ml-2 h-4 w-4" />
+        <Button variant="ghost" size="sm" asChild>
+          <Link href={`/agent/${agent.id}`}>
+            View
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
         </Button>
       </CardFooter>
     </Card>
   );
 }
-
-    
