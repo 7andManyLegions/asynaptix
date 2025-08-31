@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -13,6 +14,11 @@ import { useTheme } from 'next-themes';
 export default function SettingsPage() {
     const { toast } = useToast();
     const { theme, setTheme } = useTheme();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const handleSaveChanges = () => {
         toast({
@@ -61,16 +67,18 @@ export default function SettingsPage() {
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="theme-select">Theme</Label>
-                        <Select value={theme} onValueChange={setTheme}>
-                            <SelectTrigger id="theme-select">
-                                <SelectValue placeholder="Select theme" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="light">Light</SelectItem>
-                                <SelectItem value="dark">Dark</SelectItem>
-                                <SelectItem value="system">System</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        {isMounted && (
+                          <Select value={theme} onValueChange={setTheme}>
+                              <SelectTrigger id="theme-select">
+                                  <SelectValue placeholder="Select theme" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                  <SelectItem value="light">Light</SelectItem>
+                                  <SelectItem value="dark">Dark</SelectItem>
+                                  <SelectItem value="system">System</SelectItem>
+                              </SelectContent>
+                          </Select>
+                        )}
                     </div>
                 </CardContent>
                 <CardFooter>
