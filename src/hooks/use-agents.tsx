@@ -8,6 +8,7 @@ export { type Agent, type SecurityRating };
 interface AgentsContextType {
   agents: Agent[];
   addAgent: (agent: Agent) => void;
+  updateAgent: (agent: Agent) => void;
 }
 
 const AgentsContext = createContext<AgentsContextType | undefined>(undefined);
@@ -46,9 +47,18 @@ export function AgentsProvider({ children }: { children: ReactNode }) {
         return newAgents;
     });
   };
+
+  const updateAgent = (updatedAgent: Agent) => {
+    setAgents(prevAgents => {
+        const newAgents = prevAgents.map(a => a.id === updatedAgent.id ? updatedAgent : a);
+        const userAgents = newAgents.filter(a => a.isUserCreated);
+        saveUserAgents(userAgents);
+        return newAgents;
+    });
+  }
   
   return (
-    <AgentsContext.Provider value={{ agents, addAgent }}>
+    <AgentsContext.Provider value={{ agents, addAgent, updateAgent }}>
       {children}
     </AgentsContext.Provider>
   );
