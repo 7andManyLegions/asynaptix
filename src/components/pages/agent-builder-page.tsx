@@ -12,7 +12,7 @@ import { tools, type Tool } from '@/lib/data';
 import { useAgents } from '@/hooks/use-agents.tsx';
 import { ToolCard } from '../common/tool-card';
 import { Badge } from '../ui/badge';
-import { X, Wand2, Package, Save, KeyRound } from 'lucide-react';
+import { X, Wand2, Package, Save, KeyRound, Code, SlidersHorizontal, BrainCircuit } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { agentCreationAssistant } from '@/ai/flows/agent-creation-assistant';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -25,6 +25,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Switch } from '../ui/switch';
+import { Slider } from '../ui/slider';
 
 type ApiKey = {
   service: string;
@@ -42,6 +44,7 @@ const SUPPORTED_SERVICES = [
 export default function AgentBuilderPage() {
   const [agentName, setAgentName] = useState('');
   const [agentDescription, setAgentDescription] = useState('');
+  const [agentPrompt, setAgentPrompt] = useState('');
   const [agentLogic, setAgentLogic] = useState('');
   const [selectedTools, setSelectedTools] = useState<Tool[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -54,6 +57,11 @@ export default function AgentBuilderPage() {
   const [isKeyDialogOpen, setIsKeyDialogOpen] = useState(false);
   const [newApiKey, setNewApiKey] = useState('');
   const [serviceForNewKey, setServiceForNewKey] = useState<{id: string, name: string} | null>(null);
+
+  const [isAdvanced, setIsAdvanced] = useState(false);
+  const [temperature, setTemperature] = useState([0.5]);
+  const [topK, setTopK] = useState([20]);
+  const [topP, setTopP] = useState([0.8]);
 
   useEffect(() => {
     // Load keys from localStorage on mount
@@ -221,8 +229,16 @@ export default function AgentBuilderPage() {
       <div className="lg:col-span-2 space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Agent Configuration</CardTitle>
-            <CardDescription>Define the core properties and logic of your agent.</CardDescription>
+            <div className="flex justify-between items-center">
+                <div>
+                    <CardTitle>Agent Configuration</CardTitle>
+                    <CardDescription>Define the core properties and logic of your agent.</CardDescription>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Switch id="advanced-mode" checked={isAdvanced} onCheckedChange={setIsAdvanced} />
+                    <Label htmlFor="advanced-mode">Developer Mode</Label>
+                </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -233,6 +249,12 @@ export default function AgentBuilderPage() {
               <Label htmlFor="agent-description">Description</Label>
               <Textarea id="agent-description" placeholder="Describe what your agent does..." value={agentDescription} onChange={e => setAgentDescription(e.target.value)} />
             </div>
+            {!isAdvanced && (
+                <div className="space-y-2">
+                    <Label htmlFor="agent-prompt">Agent Prompt</Label>
+                    <Textarea id="agent-prompt" placeholder="Give your agent a persona and instructions. E.g., 'You are a helpful assistant that speaks like a pirate.'" value={agentPrompt} onChange={(e) => setAgentPrompt(e.target.value)} />
+                </div>
+            )}
             <div className="space-y-2">
               <Label>Model</Label>
               <Select onValueChange={handleModelChange} value={selectedModel}>
@@ -247,22 +269,63 @@ export default function AgentBuilderPage() {
                 </SelectContent>
               </Select>
             </div>
-             <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <Label htmlFor="agent-logic">Agent Logic / Orchestration</Label>
-                <Button variant="ghost" size="sm" onClick={handleGetSuggestion} disabled={isGenerating}>
-                  <Wand2 className="mr-2 h-4 w-4" />
-                  {isGenerating ? 'Generating...' : 'AI Assist'}
-                </Button>
-              </div>
-              <Textarea
-                id="agent-logic"
-                placeholder="Enter agent logic, or use AI Assist to generate it."
-                className="min-h-[250px] font-mono text-sm"
-                value={agentLogic}
-                onChange={e => setAgentLogic(e.target.value)}
-              />
-            </div>
+             
+             {isAdvanced && (
+                <>
+                <Card>
+                    <CardHeader className="flex-row items-center gap-4 space-y-0 pb-4">
+                        <SlidersHorizontal className="h-5 w-5 text-muted-foreground"/>
+                        <CardTitle className="text-lg">Model Parameters</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6 pt-2">
+                        <div className="space-y-2">
+                            <Label>Temperature: <span className="text-muted-foreground font-normal">{temperature}</span></Label>
+                            <Slider value={temperature} onValueChange={setTemperature} max={1} step={0.1}/>
+                        </div>
+                         <div className="space-y-2">
+                            <Label>Top-K: <span className="text-muted-foreground font-normal">{topK}</span></Label>
+                            <Slider value={topK} onValueChange={setTopK} max={50} step={1}/>
+                        </div>
+                         <div className="space-y-2">
+                            <Label>Top-P: <span className="text-muted-foreground font-normal">{topP}</span></Label>
+                            <Slider value={topP} onValueChange={setTopP} max={1} step={0.1}/>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                     <CardHeader className="flex-row items-center gap-4 space-y-0 pb-4">
+                        <BrainCircuit className="h-5 w-5 text-muted-foreground"/>
+                        <CardTitle className="text-lg">Memory</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4 pt-2">
+                         <div className="flex items-center justify-between rounded-lg border p-3">
+                            <div>
+                                <Label htmlFor="enable-memory" className="font-medium">Enable Memory</Label>
+                                <p className="text-xs text-muted-foreground">Allow the agent to remember past conversations.</p>
+                            </div>
+                            <Switch id="enable-memory" />
+                        </div>
+                    </CardContent>
+                </Card>
+                 <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                        <Label htmlFor="agent-logic">Agent Logic / Orchestration</Label>
+                        <Button variant="ghost" size="sm" onClick={handleGetSuggestion} disabled={isGenerating}>
+                        <Wand2 className="mr-2 h-4 w-4" />
+                        {isGenerating ? 'Generating...' : 'AI Assist'}
+                        </Button>
+                    </div>
+                    <Textarea
+                        id="agent-logic"
+                        placeholder="Enter agent logic, or use AI Assist to generate it."
+                        className="min-h-[250px] font-mono text-sm"
+                        value={agentLogic}
+                        onChange={e => setAgentLogic(e.target.value)}
+                    />
+                </div>
+                </>
+            )}
+
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
              <Button variant="secondary" onClick={handleSaveDraft}><Save className="mr-2 h-4 w-4"/> Save Draft</Button>
@@ -272,59 +335,80 @@ export default function AgentBuilderPage() {
       </div>
 
       <div className="lg:col-span-1 space-y-6">
-        <Card>
-            <CardHeader>
-                <CardTitle>Selected Tools</CardTitle>
-                <CardDescription>Tools your agent can utilize.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                {selectedTools.length > 0 ? (
-                    <div className="space-y-2">
-                        {selectedTools.map(tool => (
-                            <div key={tool.id} className="flex items-center justify-between rounded-md border p-2">
-                                <span className="text-sm font-medium">{tool.name}</span>
-                                <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveTool(tool.id)}>
-                                    <X className="h-4 w-4" />
-                                </Button>
+        {isAdvanced && (
+            <>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Selected Tools</CardTitle>
+                        <CardDescription>Tools your agent can utilize.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {selectedTools.length > 0 ? (
+                            <div className="space-y-2">
+                                {selectedTools.map(tool => (
+                                    <div key={tool.id} className="flex items-center justify-between rounded-md border p-2">
+                                        <span className="text-sm font-medium">{tool.name}</span>
+                                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveTool(tool.id)}>
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p className="text-sm text-muted-foreground text-center py-4">No tools added yet.</p>
-                )}
-            </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Available Tools</CardTitle>
-            <CardDescription>Click to add tools to your agent.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 max-h-[600px] overflow-y-auto">
-            {tools.map(tool => (
-              <div key={tool.id} className="transform transition-transform duration-200 hover:scale-[1.02]">
-                <div 
-                    className="cursor-pointer" 
-                    onClick={() => handleAddTool(tool)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleAddTool(tool)}
-                >
-                    <Card className="p-3 shadow-sm hover:shadow-md">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                                <tool.icon className="h-5 w-5 text-primary" />
-                            </div>
-                            <div>
-                                <h4 className="font-semibold text-sm">{tool.name}</h4>
-                                <p className="text-xs text-muted-foreground">{tool.description}</p>
-                            </div>
+                        ) : (
+                            <p className="text-sm text-muted-foreground text-center py-4">No tools added yet.</p>
+                        )}
+                    </CardContent>
+                </Card>
+                <Card>
+                <CardHeader>
+                    <CardTitle>Available Tools</CardTitle>
+                    <CardDescription>Click to add tools to your agent.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 max-h-[600px] overflow-y-auto">
+                    {tools.map(tool => (
+                    <div key={tool.id} className="transform transition-transform duration-200 hover:scale-[1.02]">
+                        <div 
+                            className="cursor-pointer" 
+                            onClick={() => handleAddTool(tool)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleAddTool(tool)}
+                        >
+                            <Card className="p-3 shadow-sm hover:shadow-md">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+                                        <tool.icon className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-sm">{tool.name}</h4>
+                                        <p className="text-xs text-muted-foreground">{tool.description}</p>
+                                    </div>
+                                </div>
+                            </Card>
                         </div>
-                    </Card>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+                    </div>
+                    ))}
+                </CardContent>
+                </Card>
+            </>
+        )}
+        {!isAdvanced && (
+            <Card>
+                <CardHeader>
+                    <CardTitle>What's Next?</CardTitle>
+                    <CardDescription>Simple agents are great for basic tasks. For more complex workflows, enable Developer Mode.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Alert>
+                        <Code className="h-4 w-4" />
+                        <AlertTitle>Enable Developer Mode</AlertTitle>
+                        <AlertDescription>
+                           Unlock powerful features like custom logic, tool integrations, and fine-grained model controls by enabling Developer Mode at the top of the page.
+                        </AlertDescription>
+                    </Alert>
+                </CardContent>
+            </Card>
+        )}
       </div>
 
        <Dialog open={isKeyDialogOpen} onOpenChange={setIsKeyDialogOpen}>
@@ -355,3 +439,5 @@ export default function AgentBuilderPage() {
   );
 }
 
+
+    
