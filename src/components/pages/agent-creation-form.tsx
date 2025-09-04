@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { tools, type Tool } from '@/lib/data';
+import { tools, type Tool, type Agent } from '@/lib/data';
 import { useAgents } from '@/hooks/use-agents.tsx';
 import { ToolCard } from '../common/tool-card';
 import { Badge } from '../ui/badge';
@@ -63,6 +63,7 @@ export default function AgentCreationForm() {
   const [topK, setTopK] = useState([20]);
   const [topP, setTopP] = useState([0.8]);
   const [isPackaging, setIsPackaging] = useState(false);
+  const [framework, setFramework] = useState<Agent['framework'] | null>(null);
 
   useEffect(() => {
     // Load keys from localStorage on mount
@@ -80,6 +81,11 @@ export default function AgentCreationForm() {
         setAgentLogic(template);
         setIsAdvanced(true); // Switch to developer mode if a template is used
         sessionStorage.removeItem('agentTemplate'); // Clean up after use
+    }
+     const selectedFramework = sessionStorage.getItem('agentFramework') as Agent['framework'];
+    if (selectedFramework) {
+        setFramework(selectedFramework);
+        sessionStorage.removeItem('agentFramework');
     }
   }, []);
 
@@ -222,6 +228,7 @@ export default function AgentCreationForm() {
       imageUrl: 'https://picsum.photos/600/400',
       imageHint: 'abstract technology',
       isUserCreated: true,
+      framework: framework ?? undefined,
     };
     await addAgent(newAgent);
 
@@ -243,7 +250,7 @@ export default function AgentCreationForm() {
           <CardHeader>
             <div className="flex justify-between items-center">
                 <div>
-                    <CardTitle>Agent Configuration</CardTitle>
+                    <CardTitle>{framework ? `${framework} AI Agent Creation` : 'Agent Configuration'}</CardTitle>
                     <CardDescription>Define the core properties and logic of your agent.</CardDescription>
                 </div>
                 <div className="flex items-center space-x-2">

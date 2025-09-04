@@ -12,6 +12,7 @@ export interface Agent {
   imageUrl: string;
   imageHint: string;
   isUserCreated?: boolean;
+  framework?: 'LangChain' | 'LlamaIndex' | 'Custom';
 }
 
 export interface Tool {
@@ -30,7 +31,8 @@ export const initialAgents: Agent[] = [
     securityRating: "trusted",
     price: "paid",
     imageUrl: "https://picsum.photos/600/400",
-    imageHint: "data chart"
+    imageHint: "data chart",
+    framework: "Custom",
   },
   {
     id: "social-media-manager",
@@ -39,7 +41,8 @@ export const initialAgents: Agent[] = [
     securityRating: "verified",
     price: "free",
     imageUrl: "https://picsum.photos/600/400",
-    imageHint: "social media"
+    imageHint: "social media",
+    framework: "Custom",
   },
   {
     id: "code-generator",
@@ -48,7 +51,8 @@ export const initialAgents: Agent[] = [
     securityRating: "scanned",
     price: "free",
     imageUrl: "https://picsum.photos/600/400",
-    imageHint: "code screen"
+    imageHint: "code screen",
+    framework: "LangChain",
   },
   {
     id: "research-assistant",
@@ -57,7 +61,8 @@ export const initialAgents: Agent[] = [
     securityRating: "trusted",
     price: "paid",
     imageUrl: "https://picsum.photos/600/400",
-    imageHint: "books library"
+    imageHint: "books library",
+    framework: "Custom",
   },
   {
     id: "personal-finance-bot",
@@ -66,7 +71,7 @@ export const initialAgents: Agent[] = [
     securityRating: "none",
     price: "free",
     imageUrl: "https://picsum.photos/600/400",
-    imageHint: "money wallet"
+    imageHint: "money wallet",
   },
   {
     id: "travel-planner",
@@ -75,7 +80,8 @@ export const initialAgents: Agent[] = [
     securityRating: "verified",
     price: "free",
     imageUrl: "https://picsum.photos/600/400",
-    imageHint: "travel map"
+    imageHint: "travel map",
+    framework: "LlamaIndex",
   },
 ];
 

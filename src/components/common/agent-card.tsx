@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Agent } from '@/lib/data';
 import { SecurityBadge } from './security-badge';
-import { ArrowRight, UploadCloud, ShieldCheck, ShieldAlert, Shield } from 'lucide-react';
+import { ArrowRight, UploadCloud, ShieldCheck, ShieldAlert, Shield, Cpu } from 'lucide-react';
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -248,7 +248,15 @@ export function AgentCard({ agent }: AgentCardProps) {
         </div>
       </CardHeader>
       <CardContent className="p-4 flex-grow">
-        <CardTitle className="mb-2 text-lg font-headline">{agent.name}</CardTitle>
+        <div className="flex justify-between items-start">
+            <CardTitle className="mb-2 text-lg font-headline">{agent.name}</CardTitle>
+            {agent.framework && (
+                <Badge variant="outline" className="gap-1.5 shrink-0">
+                    <Cpu className="h-3.5 w-3.5" />
+                    {agent.framework}
+                </Badge>
+            )}
+        </div>
         <p className="text-sm text-muted-foreground line-clamp-3">{agent.description}</p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
