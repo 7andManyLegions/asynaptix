@@ -250,7 +250,7 @@ export default function AgentCreationForm() {
           <CardHeader>
             <div className="flex justify-between items-center">
                 <div>
-                    <CardTitle>{framework ? `${framework} AI Agent Creation` : 'Agent Configuration'}</CardTitle>
+                    <CardTitle>{framework ? `Create ${framework} Agent` : 'Agent Configuration'}</CardTitle>
                     <CardDescription>Define the core properties and logic of your agent.</CardDescription>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -294,7 +294,7 @@ export default function AgentCreationForm() {
                 <Card>
                     <CardHeader className="flex-row items-center gap-4 space-y-0 pb-4">
                         <SlidersHorizontal className="h-5 w-5 text-muted-foreground"/>
-                        <CardTitle className="text-lg">Model Parameters</CardTitle>
+                        <CardTitle className="text-base">Model Parameters</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6 pt-2">
                         <div className="space-y-2">
@@ -314,7 +314,7 @@ export default function AgentCreationForm() {
                 <Card>
                      <CardHeader className="flex-row items-center gap-4 space-y-0 pb-4">
                         <BrainCircuit className="h-5 w-5 text-muted-foreground"/>
-                        <CardTitle className="text-lg">Memory</CardTitle>
+                        <CardTitle className="text-base">Memory</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4 pt-2">
                          <div className="flex items-center justify-between rounded-lg border p-3">
@@ -357,7 +357,7 @@ export default function AgentCreationForm() {
       </div>
 
       <div className="lg:col-span-1 space-y-6">
-        {isAdvanced && (
+        {isAdvanced ? (
             <>
                 <Card>
                     <CardHeader>
@@ -413,8 +413,7 @@ export default function AgentCreationForm() {
                 </CardContent>
                 </Card>
             </>
-        )}
-        {!isAdvanced && (
+        ) : (
             <Card>
                 <CardHeader>
                     <CardTitle>What's Next?</CardTitle>

@@ -46,7 +46,7 @@ const creationOptions = [
 
 const frameworks = [
     {
-        id: 'langchain',
+        id: 'LangChain',
         name: 'LangChain',
         description: 'Best for complex chains and prompt engineering.',
         logo: '🦜️🔗',
@@ -67,7 +67,7 @@ const frameworks = [
         isDisabled: true,
     },
      {
-        id: 'llamaindex',
+        id: 'LlamaIndex',
         name: 'LlamaIndex',
         description: 'Best for data-intensive, RAG-based agents.',
         logo: '🦙',
