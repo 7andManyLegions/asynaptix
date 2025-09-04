@@ -6,25 +6,30 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, Bot, Library, Wand2 } from 'lucide-react';
 import { Badge } from '../ui/badge';
+import { useRouter } from 'next/navigation';
 
 const creationOptions = [
     {
+        id: 'ai',
         title: "Create with AI Assistant",
         description: "Describe the agent you want to build in plain English. Our AI will generate the configuration and code to get you started.",
         icon: Wand2,
         link: "/build/new",
         linkText: "Start with AI",
         isPremium: true,
+        isDisabled: false,
     },
     {
+        id: 'langchain',
         title: "Use a Framework",
         description: "Build your agent using a pre-configured template for popular frameworks like LangChain, LlamaIndex, and more.",
         icon: Library,
-        link: "#",
+        link: "/build/new?template=langchain",
         linkText: "Select Framework",
-        isDisabled: true,
+        isDisabled: false,
     },
      {
+        id: 'scratch',
         title: "Start from Scratch",
         description: "For expert users. Build an agent with full control over every component, logic, and integration from the ground up.",
         icon: Bot,
@@ -35,6 +40,51 @@ const creationOptions = [
 ];
 
 export default function AgentBuilderHubPage() {
+    const router = useRouter();
+
+    const handleOptionClick = (option: typeof creationOptions[0]) => {
+        if(option.isDisabled) return;
+
+        if (option.id === 'langchain') {
+            const langchainTemplate = `
+// Example of a LangChain agent using a simple chain.
+// This requires 'langchain' to be installed.
+
+import { ChatOpenAI } from "@langchain/openai";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from "@langchain/core/output_parsers";
+
+// 1. Set up the model and prompt
+const model = new ChatOpenAI({});
+const prompt = ChatPromptTemplate.fromMessages([
+    ["system", "You are a helpful assistant."],
+    ["user", "{input}"],
+]);
+const outputParser = new StringOutputParser();
+
+// 2. Create the chain
+const chain = prompt.connect(model).pipe(outputParser);
+
+// 3. Define the agent's execution logic
+async function run(input: { input: string }) {
+    console.log("Running LangChain agent with input:", input.input);
+    const result = await chain.invoke({
+        input: input.input,
+    });
+    console.log("Result:", result);
+    return result;
+}
+
+// Example invocation (for testing)
+// run({ input: "What is the capital of France?" });
+`;
+            sessionStorage.setItem('agentTemplate', langchainTemplate);
+            router.push(option.link);
+        } else {
+             router.push(option.link);
+        }
+    }
+
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center">
@@ -61,11 +111,9 @@ export default function AgentBuilderHubPage() {
                         </CardHeader>
                         <CardContent className="flex-grow" />
                         <CardContent>
-                             <Button asChild disabled={option.isDisabled}>
-                                <Link href={option.link}>
-                                    {option.linkText}
-                                    {!option.isDisabled && <ArrowRight className="ml-2 h-4 w-4" />}
-                                </Link>
+                             <Button onClick={() => handleOptionClick(option)} disabled={option.isDisabled}>
+                                {option.linkText}
+                                {!option.isDisabled && <ArrowRight className="ml-2 h-4 w-4" />}
                             </Button>
                         </CardContent>
                     </Card>

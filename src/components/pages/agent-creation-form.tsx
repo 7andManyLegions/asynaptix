@@ -74,6 +74,13 @@ export default function AgentCreationForm() {
     } catch (error) {
       console.error("Failed to load API keys from localStorage", error);
     }
+
+    const template = sessionStorage.getItem('agentTemplate');
+    if (template) {
+        setAgentLogic(template);
+        setIsAdvanced(true); // Switch to developer mode if a template is used
+        sessionStorage.removeItem('agentTemplate'); // Clean up after use
+    }
   }, []);
 
   const saveApiKeys = (keys: ApiKey[]) => {

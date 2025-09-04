@@ -8,34 +8,50 @@ import {
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
 import { LayoutGrid, Wrench, Package, Link2, CaseUpper, FolderKanban, KeyRound } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 
 const navItems = [
-  { href: '/', label: 'Discover', icon: LayoutGrid },
-  { href: '/marketplace', label: 'Tools & Plugins', icon: CaseUpper },
-  { href: '/build', label: 'Agent Builder', icon: Wrench },
-  { href: '/link-agents', label: 'Link Agents', icon: Link2 },
-  { href: '/my-agents', label: 'My Agents', icon: FolderKanban },
-  { href: '/api-keys', label: 'API Keys', icon: KeyRound },
+  { href: '/', label: 'Discover', icon: LayoutGrid, auth: false },
+  { href: '/marketplace', label: 'Tools & Plugins', icon: CaseUpper, auth: false },
+  { href: '/build', label: 'Agent Builder', icon: Wrench, auth: false },
+  { href: '/link-agents', label: 'Link Agents', icon: Link2, auth: true },
+  { href: '/my-agents', label: 'My Agents', icon: FolderKanban, auth: true },
+  { href: '/api-keys', label: 'API Keys', icon: KeyRound, auth: true },
 ];
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const { user, loading } = useAuth();
 
   return (
     <SidebarMenu>
-      {navItems.map((item) => (
-        <SidebarMenuItem key={item.href}>
-          <Link href={item.href} passHref>
-            <SidebarMenuButton
-              isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
-              tooltip={item.label}
-            >
-              <item.icon className="h-5 w-5" />
-              <span>{item.label}</span>
-            </SidebarMenuButton>
-          </Link>
-        </SidebarMenuItem>
-      ))}
+      {navItems.map((item) => {
+        const isAuthProtected = item.auth;
+        const isDisabled = isAuthProtected && !user && !loading;
+
+        const button = (
+          <SidebarMenuButton
+            isActive={!isDisabled && pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
+            tooltip={item.label}
+            disabled={isDisabled}
+          >
+            <item.icon className="h-5 w-5" />
+            <span>{item.label}</span>
+          </SidebarMenuButton>
+        );
+
+        return (
+          <SidebarMenuItem key={item.href}>
+            {isDisabled ? (
+              <div className="cursor-not-allowed">{button}</div>
+            ) : (
+              <Link href={item.href} passHref>
+                {button}
+              </Link>
+            )}
+          </SidebarMenuItem>
+        );
+      })}
     </SidebarMenu>
   );
 }
