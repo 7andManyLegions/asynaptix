@@ -1,5 +1,5 @@
-import AgentBuilderPage from "@/components/pages/agent-builder-page";
+import AgentBuilderHubPage from "@/components/pages/agent-builder-hub-page";
 
 export default function Build() {
-  return <AgentBuilderPage />;
+  return <AgentBuilderHubPage />;
 }

@@ -27,7 +27,7 @@ export function SidebarNav() {
         <SidebarMenuItem key={item.href}>
           <Link href={item.href} passHref>
             <SidebarMenuButton
-              isActive={pathname === item.href}
+              isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
               tooltip={item.label}
             >
               <item.icon className="h-5 w-5" />

@@ -71,7 +71,7 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps) {
                 </Button>
                 {agent.isUserCreated && (
                     <Button variant="ghost" asChild>
-                        <Link href="/build">
+                        <Link href="/build/new">
                             <Edit className="mr-2 h-4 w-4"/>
                             Edit
                         </Link>

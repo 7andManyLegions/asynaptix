@@ -11,7 +11,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -124,7 +123,7 @@ export default function MyAgentsPage() {
             <Button asChild>
                 <Link href="/build">
                     <Plus className="mr-2 h-4 w-4" />
-                    Create New Agent
+                    Create Agent
                 </Link>
             </Button>
          </div>

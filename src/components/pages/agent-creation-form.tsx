@@ -41,7 +41,7 @@ const SUPPORTED_SERVICES = [
     { id: 'local', name: 'Local Llama3', models: ['local-llama3'], noKey: true },
 ];
 
-export default function AgentBuilderPage() {
+export default function AgentCreationForm() {
   const [agentName, setAgentName] = useState('');
   const [agentDescription, setAgentDescription] = useState('');
   const [agentPrompt, setAgentPrompt] = useState('');
