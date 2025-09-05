@@ -1,3 +1,4 @@
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -27,8 +28,11 @@ export function SidebarNav() {
   return (
     <SidebarMenu>
       {navItems.map((item) => {
-        const isAuthProtected = item.auth;
-        const isDisabled = isAuthProtected && !user && !loading;
+        // With simulated auth, we can just treat the user as always logged in.
+        // The original logic is kept here but commented for easy restoration.
+        // const isAuthProtected = item.auth;
+        // const isDisabled = isAuthProtected && !user && !loading;
+        const isDisabled = false;
 
         const button = (
           <SidebarMenuButton

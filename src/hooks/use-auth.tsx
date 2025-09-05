@@ -18,46 +18,64 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const provider = new GoogleAuthProvider();
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Simulate a logged-in user to bypass auth issues for development
+  const mockUser: User = {
+    uid: 'mock-user-id',
+    email: 'dev@asynaptix.com',
+    displayName: 'Dev User',
+    photoURL: 'https://picsum.photos/100/100',
+    emailVerified: true,
+    isAnonymous: false,
+    metadata: {},
+    providerData: [],
+    providerId: 'firebase',
+    tenantId: null,
+    delete: async () => {},
+    getIdToken: async () => 'mock-token',
+    getIdTokenResult: async () => ({
+        token: 'mock-token',
+        expirationTime: '',
+        authTime: '',
+        issuedAtTime: '',
+        signInProvider: null,
+        signInSecondFactor: null,
+        claims: {},
+    }),
+    reload: async () => {},
+    toJSON: () => ({}),
+  };
+
+  const [user, setUser] = useState<User | null>(mockUser);
+  const [loading, setLoading] = useState(false); // Set loading to false as we are not waiting for a real auth check
   const router = useRouter();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    }, (error) => {
-      // Handle potential initialization errors
-      console.error("Firebase Auth Error:", error);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  // The original useEffect is commented out to prevent real auth calls
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     setUser(user);
+  //     setLoading(false);
+  //   }, (error) => {
+  //     console.error("Firebase Auth Error:", error);
+  //     setLoading(false);
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
   const loginWithGoogle = async () => {
-    // No need to set loading here, onAuthStateChanged will handle it
-    try {
-      await signInWithPopup(auth, provider);
-      // onAuthStateChanged will handle setting the user and loading state
-    } catch (error) {
-      console.error("Error during Google sign-in:", error);
-    }
+    console.log("Simulating Google login.");
+    setUser(mockUser);
+    return Promise.resolve();
   };
 
   const logout = async () => {
-    try {
-      await signOut(auth);
-      router.push('/login');
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
+    console.log("Simulating logout.");
+    setUser(null);
+    router.push('/login');
+    return Promise.resolve();
   };
   
-  // Do not render children until loading is false.
-  // This ensures that Firebase has initialized and the auth state is known.
   if (loading) {
-    return null; // Or a global loading spinner
+    return null; // This will not be hit with the current setup but kept for safety
   }
 
   return (
