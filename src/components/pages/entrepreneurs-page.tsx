@@ -88,7 +88,7 @@ export default function EntrepreneursPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {topGrossingAgents.map((agent) => (
-                             <Card key={agent.id} className="hover:bg-muted/50 transition-colors">
+                             <Card key={agent.id} className="hover:bg-muted/50 transition-colors cursor-pointer">
                                 <CardContent className="p-4 flex items-start gap-4">
                                      <div className="text-2xl font-bold text-muted-foreground w-6 text-center">{agent.rank}</div>
                                      <Image src={agent.imageUrl} alt={agent.name} width={50} height={50} className="rounded-md" data-ai-hint="abstract logo" />
@@ -114,7 +114,7 @@ export default function EntrepreneursPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {mostLinkedAgents.map((agent) => (
-                             <Card key={agent.id} className="hover:bg-muted/50 transition-colors">
+                             <Card key={agent.id} className="hover:bg-muted/50 transition-colors cursor-pointer">
                                 <CardContent className="p-4 flex items-start gap-4">
                                      <div className="text-2xl font-bold text-muted-foreground w-6 text-center">{agent.rank}</div>
                                      <div className="h-12 w-12 flex items-center justify-center bg-primary/10 rounded-md">
