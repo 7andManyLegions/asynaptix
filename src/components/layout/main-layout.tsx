@@ -35,11 +35,11 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader className="p-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <Image
-              src="/images/logo.svg"
+          <Image
+              src="/images/logo_transparent.png"
               alt="Asynaptix Logo"
-              width={40}
-              height={40}
+              width={60}
+              height={60}
               className="object-contain"
             />
             <div className="flex flex-col">
