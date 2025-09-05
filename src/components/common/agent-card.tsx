@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import type { Agent } from '@/lib/data';
 import { SecurityBadge } from './security-badge';
 import { ArrowRight, UploadCloud, ShieldCheck, ShieldAlert, Shield, Cpu, Star } from 'lucide-react';
-import React, 'react';
+import React from 'react';
 import {
   Dialog,
   DialogContent,
