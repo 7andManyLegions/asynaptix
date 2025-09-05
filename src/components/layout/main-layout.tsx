@@ -7,7 +7,6 @@ import {
   Sidebar,
   SidebarRail,
   SidebarInset,
-  SidebarTrigger,
   SidebarHeader,
   SidebarContent,
   SidebarFooter,
@@ -17,28 +16,11 @@ import {
 } from '@/components/ui/sidebar';
 import { SidebarNav } from './sidebar-nav';
 import { AppHeader } from './header';
-import { Bot, Wrench, Package, Shield, LayoutGrid, LifeBuoy, BookOpen, ShieldCheck, Info, ChevronsLeft } from 'lucide-react';
+import { Bot, Wrench, Package, Shield, LayoutGrid, LifeBuoy, BookOpen, ShieldCheck, Info } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '../ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { useSidebar } from '@/components/ui/sidebar';
-
-function SidebarCollapseButton() {
-    const { setOpen, open } = useSidebar();
-    return (
-        <Button
-            variant="ghost"
-            size="icon"
-            className="w-full justify-center text-sidebar-foreground/70 hover:text-sidebar-foreground"
-            onClick={() => setOpen(!open)}
-        >
-            <ChevronsLeft className={`h-5 w-5 transition-transform duration-300 ${!open ? 'rotate-180' : ''}`} />
-        </Button>
-    )
-}
-
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -104,8 +86,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                     </Link>
                 </SidebarMenuItem>
             </SidebarMenu>
-            <div className="border-t border-sidebar-border -mx-2 my-2" />
-            <SidebarCollapseButton />
         </SidebarFooter>
       </Sidebar>
       <SidebarRail />
