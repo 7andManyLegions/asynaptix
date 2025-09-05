@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { tools, type Tool } from '@/lib/data';
 import { ToolCard } from '@/components/common/tool-card';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Wand2, Loader2, Save } from 'lucide-react';
+import { Search, Plus, Wand2, Loader2, Save, CaseUpper } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
@@ -13,6 +13,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '.
 import { Switch } from '../ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { suggestToolCode } from '@/ai/flows/tool-code-suggestion';
+import Link from 'next/link';
 
 
 export default function MarketplacePage() {
@@ -98,10 +99,18 @@ export default function MarketplacePage() {
           <h1 className="text-3xl font-bold tracking-tight font-headline">Marketplace</h1>
           <p className="text-muted-foreground mt-2">Enhance your agents with powerful Tools and framework Plugins.</p>
         </div>
-        <Button onClick={() => setShowCreateForm(!showCreateForm)}>
-            <Plus className="mr-2 h-4 w-4" />
-            {showCreateForm ? "Cancel" : "Create Tool"}
-        </Button>
+        <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowCreateForm(!showCreateForm)}>
+                <Plus className="mr-2 h-4 w-4" />
+                {showCreateForm ? "Cancel" : "Create Tool"}
+            </Button>
+             <Button asChild>
+                <Link href="/marketplace/new-plugin">
+                    <CaseUpper className="mr-2 h-4 w-4" />
+                    Create Plugin
+                </Link>
+            </Button>
+        </div>
       </div>
 
        {showCreateForm && (
