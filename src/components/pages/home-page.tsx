@@ -81,8 +81,8 @@ export default function HomePage() {
       {/* How It Works Section */}
       <section className="container mx-auto px-4">
         <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold font-headline">A New Paradigm for AI</h2>
-            <p className="mt-3 max-w-2xl mx-auto text-lg text-muted-foreground">Go beyond simple chatbots. Build systems that work for you.</p>
+            <h2 className="text-3xl md:text-4xl font-bold font-headline">From Idea to Income Stream</h2>
+            <p className="mt-3 max-w-2xl mx-auto text-lg text-muted-foreground">Build, link, and sell AI agents on an open marketplace.</p>
         </div>
         <div className="grid md:grid-cols-2 items-center gap-12">
             <div>
@@ -101,8 +101,8 @@ export default function HomePage() {
                         <span className="text-xl font-bold text-primary">1</span>
                     </div>
                     <div>
-                        <h3 className="text-xl font-semibold">Define a Goal</h3>
-                        <p className="text-muted-foreground">Describe the task you want to accomplish in natural language. The AI orchestrator breaks it down into steps.</p>
+                        <h3 className="text-xl font-semibold">Build or Request</h3>
+                        <p className="text-muted-foreground">Create agents with our powerful builder or request a new agent from the community to fill a market need.</p>
                     </div>
                 </div>
                  <div className="flex items-start gap-4">
@@ -110,8 +110,8 @@ export default function HomePage() {
                         <span className="text-xl font-bold text-primary">2</span>
                     </div>
                     <div>
-                        <h3 className="text-xl font-semibold">Assemble the Team</h3>
-                        <p className="text-muted-foreground">The system automatically selects and links the best agents and tools from the marketplace for each step of the plan.</p>
+                        <h3 className="text-xl font-semibold">Link & Customize</h3>
+                        <p className="text-muted-foreground">Combine agents and tools to create novel workflows. Customize everything from the underlying model to the logic.</p>
                     </div>
                 </div>
                  <div className="flex items-start gap-4">
@@ -119,8 +119,8 @@ export default function HomePage() {
                         <span className="text-xl font-bold text-primary">3</span>
                     </div>
                     <div>
-                        <h3 className="text-xl font-semibold">Execute & Learn</h3>
-                        <p className="text-muted-foreground">The agentic workflow runs, adapting to new information and refining its approach until the goal is achieved.</p>
+                        <h3 className="text-xl font-semibold">Publish & Profit</h3>
+                        <p className="text-muted-foreground">Sell your agents on the marketplace and earn income. We handle the payments, you focus on creating value.</p>
                     </div>
                 </div>
             </div>
