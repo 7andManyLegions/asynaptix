@@ -8,11 +8,12 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { LayoutGrid, Wrench, Package, Link2, CaseUpper, FolderKanban, KeyRound, TrendingUp } from 'lucide-react';
+import { LayoutGrid, Wrench, Package, Link2, CaseUpper, FolderKanban, KeyRound, TrendingUp, Inbox } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 
 const navItems = [
   { href: '/discover', label: 'Discover', icon: LayoutGrid, auth: false },
+  { href: '/requests', label: 'Requests', icon: Inbox, auth: false },
   { href: '/marketplace', label: 'Tools & Plugins', icon: CaseUpper, auth: false },
   { href: '/build', label: 'Agent Builder', icon: Wrench, auth: false },
   { href: '/link-agents', label: 'Link Agents', icon: Link2, auth: true },

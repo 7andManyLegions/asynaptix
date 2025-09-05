@@ -34,7 +34,7 @@ function SidebarCollapseButton() {
             className="w-full justify-center text-sidebar-foreground/70 hover:text-sidebar-foreground"
             onClick={() => setOpen(!open)}
         >
-            <ChevronsLeft className={`transition-transform duration-300 ${!open ? 'rotate-180' : ''}`} />
+            <ChevronsLeft className={`h-5 w-5 transition-transform duration-300 ${!open ? 'rotate-180' : ''}`} />
         </Button>
     )
 }
