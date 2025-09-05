@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Tool } from '@/lib/data';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ToolCardProps {
@@ -32,17 +32,27 @@ export function ToolCard({ tool, onAdd }: ToolCardProps) {
         </div>
         <div className="flex-1">
           <CardTitle className="text-base font-semibold font-headline">{tool.name}</CardTitle>
-          <Badge variant="outline" className="mt-1">{tool.category}</Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="mt-1">{tool.category}</Badge>
+            {tool.isOfficial && <Badge variant="secondary" className="mt-1">Official</Badge>}
+          </div>
         </div>
       </CardHeader>
       <CardContent className="flex-grow">
         <p className="text-sm text-muted-foreground">{tool.description}</p>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" variant="outline" onClick={handleAddClick}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add to Agent
-        </Button>
+        {tool.type === 'plugin' ? (
+          <Button className="w-full" variant="outline" disabled>
+              <ArrowRight className="mr-2 h-4 w-4" />
+              View Details
+          </Button>
+        ) : (
+          <Button className="w-full" variant="outline" onClick={handleAddClick}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add to Agent
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

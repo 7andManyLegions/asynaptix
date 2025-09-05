@@ -80,19 +80,23 @@ export default function MarketplacePage() {
   }
 
 
-  const filteredTools = useMemo(() => {
-    return tools.filter(tool =>
+  const { plugins, communityTools } = useMemo(() => {
+    const allItems = tools.filter(tool =>
       tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       tool.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    return {
+        plugins: allItems.filter(item => item.type === 'plugin'),
+        communityTools: allItems.filter(item => item.type === 'tool')
+    }
   }, [searchTerm]);
 
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight font-headline">Tools & Plugins</h1>
-          <p className="text-muted-foreground mt-2">Build, publish, and search for tools and plugins that your agents can utilize.</p>
+          <h1 className="text-3xl font-bold tracking-tight font-headline">Marketplace</h1>
+          <p className="text-muted-foreground mt-2">Enhance your agents with powerful Tools and framework Plugins.</p>
         </div>
         <Button onClick={() => setShowCreateForm(!showCreateForm)}>
             <Plus className="mr-2 h-4 w-4" />
@@ -170,23 +174,43 @@ export default function MarketplacePage() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
-          placeholder="Search for tools..."
+          placeholder="Search for tools & plugins..."
           className="pl-10 max-w-sm"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredTools.length > 0 ? (
-          filteredTools.map(tool => (
-            <ToolCard key={tool.id} tool={tool} />
-          ))
-        ) : (
-          <div className="col-span-full text-center py-12">
-            <p className="text-muted-foreground">No tools found matching your search.</p>
-          </div>
-        )}
+      <div className="space-y-8">
+        <div>
+            <h2 className="text-2xl font-semibold font-headline tracking-tight mb-4">Framework Plugins</h2>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {plugins.length > 0 ? (
+                plugins.map(tool => (
+                    <ToolCard key={tool.id} tool={tool} />
+                ))
+                ) : (
+                <div className="col-span-full text-center py-12">
+                    <p className="text-muted-foreground">No plugins found matching your search.</p>
+                </div>
+                )}
+            </div>
+        </div>
+
+        <div>
+            <h2 className="text-2xl font-semibold font-headline tracking-tight mb-4">Community Tools</h2>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {communityTools.length > 0 ? (
+                communityTools.map(tool => (
+                    <ToolCard key={tool.id} tool={tool} />
+                ))
+                ) : (
+                <div className="col-span-full text-center py-12">
+                    <p className="text-muted-foreground">No tools found matching your search.</p>
+                </div>
+                )}
+            </div>
+        </div>
       </div>
     </div>
   );

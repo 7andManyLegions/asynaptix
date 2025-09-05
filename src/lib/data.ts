@@ -23,6 +23,8 @@ export interface Tool {
   description: string;
   icon: LucideIcon;
   category: "Baseline" | "Community" | "Premium";
+  type: "tool" | "plugin";
+  isOfficial?: boolean;
 }
 
 export const initialAgents: Agent[] = [
@@ -101,11 +103,21 @@ export const initialAgents: Agent[] = [
 
 export const tools: Tool[] = [
   {
+    id: "langchain-plugin",
+    name: "LangChain Plugin",
+    description: "Integrate agents and tools built with the LangChain framework.",
+    icon: Bot,
+    category: "Community",
+    type: "plugin",
+    isOfficial: true,
+  },
+  {
     id: "calculator",
     name: "Calculator",
     description: "A baseline tool for performing mathematical calculations.",
     icon: Calculator,
     category: "Baseline",
+    type: "tool"
   },
   {
     id: "web-search",
@@ -113,13 +125,7 @@ export const tools: Tool[] = [
     description: "Enables agents to search the web for information.",
     icon: Search,
     category: "Baseline",
-  },
-  {
-    id: "langchain-integrator",
-    name: "Langchain Integrator",
-    description: "Integrate agents built with Langchain.",
-    icon: Bot,
-    category: "Community"
+    type: "tool"
   },
   {
     id: "api-connector",
@@ -127,6 +133,7 @@ export const tools: Tool[] = [
     description: "Connect to any third-party API to fetch or send data.",
     icon: Cloud,
     category: "Community",
+    type: "tool"
   },
   {
     id: "database-reader",
@@ -134,6 +141,7 @@ export const tools: Tool[] = [
     description: "Allows agents to read data from connected SQL databases.",
     icon: Database,
     category: "Community",
+    type: "tool"
   },
   {
     id: "data-visualizer",
@@ -141,6 +149,7 @@ export const tools: Tool[] = [
     description: "Generate charts and graphs from datasets.",
     icon: BarChart,
     category: "Premium",
+    type: "tool"
   },
   {
     id: "document-parser",
@@ -148,5 +157,6 @@ export const tools: Tool[] = [
     description: "Extract text and data from PDF and DOCX files.",
     icon: FileText,
     category: "Community",
+    type: "tool"
   }
 ];
