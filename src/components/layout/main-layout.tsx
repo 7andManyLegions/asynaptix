@@ -38,10 +38,14 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             <Image
               src="/images/logo.svg"
               alt="Asynaptix Logo"
-              width={160}
+              width={40}
               height={40}
               className="object-contain"
             />
+            <div className="flex flex-col">
+                <h1 className="text-xl font-bold font-headline tracking-tight">Asynaptix</h1>
+                <p className="text-xs text-muted-foreground">Agentic AI Ecosystem</p>
+            </div>
           </Link>
         </SidebarHeader>
         <SidebarContent>
