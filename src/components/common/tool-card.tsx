@@ -1,9 +1,11 @@
+
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Tool } from '@/lib/data';
 import { PlusCircle, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 interface ToolCardProps {
   tool: Tool;
@@ -43,9 +45,11 @@ export function ToolCard({ tool, onAdd }: ToolCardProps) {
       </CardContent>
       <CardFooter>
         {tool.type === 'plugin' ? (
-          <Button className="w-full" variant="outline" disabled>
-              <ArrowRight className="mr-2 h-4 w-4" />
-              View Details
+          <Button className="w-full" variant="outline" asChild>
+              <Link href="/build">
+                <ArrowRight className="mr-2 h-4 w-4" />
+                Use Framework
+              </Link>
           </Button>
         ) : (
           <Button className="w-full" variant="outline" onClick={handleAddClick}>
