@@ -26,33 +26,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
+    }, (error) => {
+      // Handle potential initialization errors
+      console.error("Firebase Auth Error:", error);
+      setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
   const loginWithGoogle = async () => {
-    setLoading(true);
+    // No need to set loading here, onAuthStateChanged will handle it
     try {
       await signInWithPopup(auth, provider);
-      // onAuthStateChanged will handle setting the user
+      // onAuthStateChanged will handle setting the user and loading state
     } catch (error) {
       console.error("Error during Google sign-in:", error);
-      setLoading(false);
     }
   };
 
   const logout = async () => {
-    setLoading(true);
     try {
       await signOut(auth);
       router.push('/login');
     } catch (error) {
       console.error("Error signing out:", error);
-    } finally {
-        setLoading(false);
     }
   };
+  
+  // Do not render children until loading is false.
+  // This ensures that Firebase has initialized and the auth state is known.
+  if (loading) {
+    return null; // Or a global loading spinner
+  }
 
   return (
     <AuthContext.Provider value={{ user, loading, loginWithGoogle, logout }}>
