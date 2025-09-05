@@ -6,6 +6,7 @@ import type { Tool } from '@/lib/data';
 import { PlusCircle, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface ToolCardProps {
   tool: Tool;
@@ -14,6 +15,7 @@ interface ToolCardProps {
 
 export function ToolCard({ tool, onAdd }: ToolCardProps) {
     const { toast } = useToast();
+    const router = useRouter();
 
     const handleAddClick = () => {
         if (onAdd) {
@@ -24,6 +26,10 @@ export function ToolCard({ tool, onAdd }: ToolCardProps) {
                 description: `${tool.name} has been added to your agent.`,
             });
         }
+    }
+    
+    const handleFrameworkClick = () => {
+        router.push('/build');
     }
 
   return (
@@ -44,10 +50,17 @@ export function ToolCard({ tool, onAdd }: ToolCardProps) {
         <p className="text-sm text-muted-foreground">{tool.description}</p>
       </CardContent>
       <CardFooter>
-          <Button className="w-full" variant="outline" onClick={handleAddClick}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add to Agent
-          </Button>
+          {tool.id === 'langchain-framework' ? (
+             <Button className="w-full" variant="outline" onClick={handleFrameworkClick}>
+                <ArrowRight className="mr-2 h-4 w-4" />
+                Use Framework
+            </Button>
+          ) : (
+            <Button className="w-full" variant="outline" onClick={handleAddClick}>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add to Agent
+            </Button>
+          )}
       </CardFooter>
     </Card>
   );
