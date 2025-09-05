@@ -77,7 +77,7 @@ export default function BillingPage() {
                     <ShieldCheck className="h-10 w-10 text-green-500" />
                     <div>
                         <p className="font-medium">Powered by Stripe Connect</p>
-                        <p className="text-sm text-muted-foreground">We partner with Stripe for simplified, secure, and compliant payment processing. Your financial data is encrypted and handled by a PCI-certified auditor.</p>
+                        <p className="text-sm text-muted-foreground">We partner with Stripe for simplified, secure, and compliant payment processing for our marketplace. Your financial data is encrypted and handled by a PCI-certified auditor.</p>
                     </div>
                 </CardContent>
             </Card>

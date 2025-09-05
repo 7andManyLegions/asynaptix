@@ -30,7 +30,7 @@ export function AppHeader() {
       ) : user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
               <Avatar className="h-9 w-9">
                 <AvatarImage src={user.photoURL ?? undefined} alt={user.displayName ?? "User"} data-ai-hint="person face" />
                 <AvatarFallback>{user.displayName?.charAt(0) ?? 'U'}</AvatarFallback>
