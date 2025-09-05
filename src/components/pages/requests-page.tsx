@@ -9,6 +9,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { ThumbsUp, PlusCircle } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 const requestedAgents = [
     { id: 1, title: "AI Story Writer for Children", description: "An agent that can write short, age-appropriate stories based on a few keywords, like 'dragon', 'castle', 'friendly'. Should have options for different age groups.", upvotes: 128, tags: ['Content Generation', 'Creative'] },
@@ -20,52 +29,28 @@ const requestedAgents = [
 export default function RequestsPage() {
     return (
         <div className="space-y-8">
-            <div className="text-center">
-                <h1 className="text-3xl font-bold tracking-tight font-headline">Agent Requests</h1>
-                <p className="text-muted-foreground mt-2">
-                    Request new agents or build agents that the community wants.
-                </p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Community Request Board</CardTitle>
-                            <CardDescription>Browse agent ideas submitted by the community. Upvote ideas you like or build them yourself.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                           {requestedAgents.map(req => (
-                               <Card key={req.id} className="hover:border-primary/50 transition-colors">
-                                   <CardContent className="p-4 flex flex-col sm:flex-row gap-4">
-                                       <div className="flex-grow">
-                                           <h3 className="font-semibold text-lg">{req.title}</h3>
-                                           <p className="text-muted-foreground text-sm mt-1 mb-2 line-clamp-2">{req.description}</p>
-                                           <div className="flex gap-2">
-                                                {req.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
-                                           </div>
-                                       </div>
-                                       <div className="flex sm:flex-col items-center sm:justify-center gap-4 sm:gap-2 shrink-0">
-                                            <Button variant="outline" size="sm" className="w-full">
-                                                <ThumbsUp className="mr-2 h-4 w-4"/>
-                                                {req.upvotes}
-                                            </Button>
-                                             <Button size="sm" className="w-full" asChild>
-                                                <Link href="/build">Build It</Link>
-                                            </Button>
-                                       </div>
-                                   </CardContent>
-                               </Card>
-                           ))}
-                        </CardContent>
-                    </Card>
+            <div className="flex justify-between items-start gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight font-headline">Agent Development Requests</h1>
+                    <p className="text-muted-foreground mt-2">
+                        Request new agents or build agents that the community wants.
+                    </p>
                 </div>
-                <div className="lg:col-span-1">
-                    <Card>
-                         <CardHeader>
-                            <CardTitle>Request an Agent</CardTitle>
-                            <CardDescription>Have an idea for an agent? Share it with the community!</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
+                <Dialog>
+                    <DialogTrigger asChild>
+                         <Button>
+                            <PlusCircle className="mr-2 h-4 w-4"/>
+                            Request Agent Development
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Request an Agent</DialogTitle>
+                            <DialogDescription>
+                                Have an idea for an agent? Share it with the community! It might get built.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
                             <div className="space-y-2">
                                 <Label htmlFor="request-title">Title</Label>
                                 <Input id="request-title" placeholder="A concise title for your idea"/>
@@ -78,16 +63,46 @@ export default function RequestsPage() {
                                 <Label htmlFor="request-tags">Tags (optional)</Label>
                                 <Input id="request-tags" placeholder="e.g., Productivity, Business, Fun"/>
                             </div>
-                        </CardContent>
-                        <CardFooter>
+                        </div>
+                        <DialogFooter>
                             <Button className="w-full">
                                 <PlusCircle className="mr-2 h-4 w-4"/>
                                 Submit Request
                             </Button>
-                        </CardFooter>
-                    </Card>
-                </div>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Community Request Board</CardTitle>
+                    <CardDescription>Browse agent ideas submitted by the community. Upvote ideas you like or build them yourself.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                   {requestedAgents.map(req => (
+                       <Card key={req.id} className="hover:border-primary/50 transition-colors">
+                           <CardContent className="p-4 flex flex-col sm:flex-row gap-4">
+                               <div className="flex-grow">
+                                   <h3 className="font-semibold text-lg">{req.title}</h3>
+                                   <p className="text-muted-foreground text-sm mt-1 mb-2 line-clamp-2">{req.description}</p>
+                                   <div className="flex gap-2">
+                                        {req.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                                   </div>
+                               </div>
+                               <div className="flex sm:flex-col items-center sm:justify-center gap-4 sm:gap-2 shrink-0">
+                                    <Button variant="outline" size="sm" className="w-full">
+                                        <ThumbsUp className="mr-2 h-4 w-4"/>
+                                        {req.upvotes}
+                                    </Button>
+                                     <Button size="sm" className="w-full" asChild>
+                                        <Link href="/build">Build It</Link>
+                                    </Button>
+                               </div>
+                           </CardContent>
+                       </Card>
+                   ))}
+                </CardContent>
+            </Card>
         </div>
     );
 }
