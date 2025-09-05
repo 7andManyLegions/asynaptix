@@ -12,8 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogIn, Search } from 'lucide-react';
-import { Input } from '../ui/input';
+import { LogIn } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
 import { Skeleton } from '../ui/skeleton';
@@ -24,14 +23,7 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6">
       <SidebarTrigger className="md:hidden" />
-      <div className="relative flex-1">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Search agents, tools..."
-          className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-        />
-      </div>
+      <div className="flex-1" />
 
       {loading ? (
         <Skeleton className="h-9 w-9 rounded-full" />

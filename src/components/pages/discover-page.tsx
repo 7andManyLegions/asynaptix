@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ShieldCheck, ShieldAlert, Shield, Verified, BadgePercent, Filter, Cpu } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, Shield, Verified, BadgePercent, Filter, Cpu, Search } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -17,6 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Input } from '../ui/input';
 
 const securityFilters: { id: SecurityRating, label: string, icon: React.ElementType }[] = [
   { id: 'trusted', label: 'Trusted Publisher', icon: ShieldCheck },
@@ -42,6 +43,7 @@ export default function DiscoverPage() {
   const [securityRatings, setSecurityRatings] = useState<Set<SecurityRating>>(new Set());
   const [prices, setPrices] = useState<Set<string>>(new Set());
   const [frameworks, setFrameworks] = useState<Set<string>>(new Set());
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSecurityChange = (rating: SecurityRating) => {
     setSecurityRatings(prev => {
@@ -85,9 +87,12 @@ export default function DiscoverPage() {
       const securityMatch = securityRatings.size === 0 || securityRatings.has(agent.securityRating);
       const priceMatch = prices.size === 0 || prices.has(agent.price);
       const frameworkMatch = frameworks.size === 0 || (agent.framework && frameworks.has(agent.framework));
-      return securityMatch && priceMatch && frameworkMatch;
+      const searchMatch = searchTerm === '' || 
+                          agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          agent.description.toLowerCase().includes(searchTerm.toLowerCase());
+      return securityMatch && priceMatch && frameworkMatch && searchMatch;
     });
-  }, [securityRatings, prices, frameworks, agents]);
+  }, [securityRatings, prices, frameworks, searchTerm, agents]);
 
   const FilterContent = () => (
     <div className="space-y-8">
@@ -147,27 +152,42 @@ export default function DiscoverPage() {
 
   return (
     <main>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold tracking-tight font-headline">Discover Capabilities</h1>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" />
-              Filters
-            </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Filters</SheetTitle>
-              <SheetDescription>
-                Refine the list of agents based on your criteria.
-              </SheetDescription>
-            </SheetHeader>
-            <div className="py-4">
-              <FilterContent />
+       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight font-headline">Discover Capabilities</h1>
+          <p className="text-muted-foreground mt-1">Browse and search for community-built agents.</p>
+        </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+           <div className="relative flex-1 sm:flex-initial">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search agents..."
+                className="w-full rounded-lg bg-background pl-8 sm:w-[200px] lg:w-[250px]"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
             </div>
-          </SheetContent>
-        </Sheet>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="shrink-0">
+                <Filter className="mr-2 h-4 w-4" />
+                Filters
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Filters</SheetTitle>
+                <SheetDescription>
+                  Refine the list of agents based on your criteria.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="py-4">
+                <FilterContent />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
