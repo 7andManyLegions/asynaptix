@@ -38,7 +38,7 @@ export default function HomePage() {
       <section className="text-center">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight font-headline">
-            The Platform for Autonomous AI
+            The Agentic AI Ecosystem
           </h1>
           <p className="mt-4 md:mt-6 max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground">
             Asynaptix provides the tools to build, link, and deploy sophisticated AI agents that can reason, plan, and execute complex tasks.
