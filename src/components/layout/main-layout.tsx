@@ -33,9 +33,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader className="p-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Bot className="w-8 h-8 text-primary" />
-            <h1 className="text-xl font-semibold font-headline">Asynaptix</h1>
+          <Link href="/" className="flex items-center gap-2.5">
+            <Bot className="w-10 h-10 text-primary" />
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold font-headline tracking-tight">Asynaptix</h1>
+              <p className="text-xs text-muted-foreground">Agentic AI Ecosystem</p>
+            </div>
           </Link>
         </SidebarHeader>
         <SidebarContent>
