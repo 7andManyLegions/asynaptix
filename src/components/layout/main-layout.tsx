@@ -20,6 +20,7 @@ import { Button } from '../ui/button';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '../ui/sidebar';
 import { useAuth } from '@/hooks/use-auth';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -34,11 +35,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader className="p-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <Bot className="w-10 h-10 text-primary" />
-            <div className="flex flex-col">
-              <h1 className="text-xl font-bold font-headline tracking-tight">Asynaptix</h1>
-              <p className="text-xs text-muted-foreground">Agentic AI Ecosystem</p>
-            </div>
+            <Image
+              src="/images/logo.svg"
+              alt="Asynaptix Logo"
+              width={160}
+              height={40}
+              className="object-contain"
+            />
           </Link>
         </SidebarHeader>
         <SidebarContent>
