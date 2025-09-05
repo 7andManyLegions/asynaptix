@@ -13,6 +13,7 @@ import {z} from 'genkit';
 
 const SuggestToolCodeInputSchema = z.object({
   toolDescription: z.string().describe('The description of the tool to create.'),
+  targetLanguage: z.enum(['TypeScript', 'Python', 'C#']).default('TypeScript').describe('The programming language for the generated code snippet.')
 });
 export type SuggestToolCodeInput = z.infer<
   typeof SuggestToolCodeInputSchema
@@ -38,20 +39,25 @@ const prompt = ai.definePrompt({
   input: {schema: SuggestToolCodeInputSchema},
   output: {schema: SuggestToolCodeOutputSchema},
   prompt: `You are an AI assistant that helps developers create Genkit tools.
-Your task is to generate a TypeScript code snippet for a new Genkit tool based on the user's description.
+Your task is to generate a code snippet for a new tool based on the user's description, in their desired programming language.
 
-The tool should follow these best practices:
+The generated code should represent the structure of a Genkit tool, but written in the syntax of the target language.
+
+For TypeScript (the native format), the tool should follow these best practices:
 1.  It must be defined using 'ai.defineTool'.
 2.  It must include 'name', 'description', 'inputSchema', and 'outputSchema'.
 3.  The 'name' should be in camelCase.
 4.  The schemas should be defined using Zod.
 5.  The implementation of the tool should be an async function.
-6.  The code should be a complete, self-contained snippet that can be placed in a file. Include necessary imports like 'z' from 'genkit' and 'ai' from '@/ai/genkit'.
+6.  The code should be a complete, self-contained snippet. Include necessary imports like 'z' from 'genkit' and 'ai' from '@/ai/genkit'.
 7.  The tool's implementation can be a placeholder (e.g., just returning a static value of the correct output schema type), but the structure must be complete.
 
-Based on the user's description, generate a suggested name for the tool, a description, and the full code snippet.
+For Python or C#, generate the equivalent conceptual structure. The code should be a clear, runnable example showing a function definition, input/output type hints or classes, and a descriptive comment block. The core logic can be a placeholder.
+
+Based on the user's description, generate a suggested name for the tool, a description, and the full code snippet in the specified language.
 
 User's Tool Description: {{{toolDescription}}}
+Target Language: {{{targetLanguage}}}
 `,
 });
 

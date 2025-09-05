@@ -34,6 +34,7 @@ export default function MarketplacePage() {
   const [useAi, setUseAi] = useState(false);
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [targetLanguage, setTargetLanguage] = useState<'TypeScript' | 'Python' | 'C#'>('TypeScript');
   const { toast } = useToast();
 
   const handleCreateTool = () => {
@@ -67,13 +68,14 @@ export default function MarketplacePage() {
     try {
         const result = await suggestToolCode({
             toolDescription: aiPrompt,
+            targetLanguage: targetLanguage,
         });
         setToolCode(result.codeSnippet);
         if(!toolName) setToolName(result.suggestedName);
         if(!toolDescription) setToolDescription(result.suggestedDescription);
         toast({
             title: "Code Generated",
-            description: "The AI-generated code has been added to the editor.",
+            description: `The AI-generated code has been added to the editor in ${targetLanguage}.`,
         });
     } catch (error) {
         console.error("Error generating tool code:", error);
@@ -175,13 +177,30 @@ export default function MarketplacePage() {
                 </div>
 
                 {useAi ? (
-                    <div className="space-y-2">
-                        <Label htmlFor="ai-prompt">Tool Description</Label>
-                        <Textarea id="ai-prompt" placeholder="Describe the tool you want to create. For example: 'A tool that fetches the current weather for a given city.'" value={aiPrompt} onChange={e => setAiPrompt(e.target.value)} />
-                         <Button onClick={handleGenerateCode} disabled={isGenerating}>
-                            {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                            Generate Code
-                        </Button>
+                    <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                        <div className="space-y-2">
+                            <Label htmlFor="ai-prompt">Tool Description</Label>
+                            <Textarea id="ai-prompt" placeholder="Describe the tool you want to create. For example: 'A tool that fetches the current weather for a given city.'" value={aiPrompt} onChange={e => setAiPrompt(e.target.value)} />
+                        </div>
+                        <div className="flex items-end gap-4">
+                            <div className="space-y-2 flex-1">
+                                <Label htmlFor="language-select">Generated Code Language</Label>
+                                <Select onValueChange={(value: 'TypeScript' | 'Python' | 'C#') => setTargetLanguage(value)} defaultValue="TypeScript">
+                                    <SelectTrigger id="language-select">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="TypeScript">TypeScript (Native)</SelectItem>
+                                        <SelectItem value="Python">Python</SelectItem>
+                                        <SelectItem value="C#">C#</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <Button onClick={handleGenerateCode} disabled={isGenerating}>
+                                {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                                Generate Code
+                            </Button>
+                        </div>
                     </div>
                 ) : null}
 
@@ -217,7 +236,7 @@ export default function MarketplacePage() {
 
       <div className="space-y-8">
         <div>
-            <h2 className="text-2xl font-semibold font-headline tracking-tight mb-4">Plugins</h2>
+            <h2 className="text-2xl font-semibold font-headline tracking-tight mb-4">Framework Plugins</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {plugins.length > 0 ? (
                 plugins.map(tool => (
