@@ -41,9 +41,6 @@ export default function HomePage() {
             The Agentic AI Ecosystem
           </h1>
           <p className="mt-4 text-xl md:text-2xl text-muted-foreground">Building the body for the AI mind.</p>
-          <p className="mt-4 md:mt-6 max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground">
-            Asynaptix provides the tools to build, link, and deploy sophisticated AI agents that can reason, plan, and execute complex tasks.
-          </p>
           <div className="mt-8 flex justify-center gap-4">
             <Button size="lg" asChild>
               <Link href="/build">
