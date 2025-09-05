@@ -8,9 +8,11 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { SecurityBadge } from '../common/security-badge';
-import { ArrowLeft, Edit, Share2, Play, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, Edit, Share2, Play, ShoppingCart, Star } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 interface AgentDetailPageProps {
   agentId: string;
@@ -20,6 +22,8 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps) {
   const { agents } = useAgents();
   const agent = agents.find(a => a.id === agentId);
   const { toast } = useToast();
+  const [userRating, setUserRating] = React.useState(0);
+  const [hoverRating, setHoverRating] = React.useState(0);
 
   if (!agent) {
     // In a real app, you might fetch data here or show a not found page.
@@ -35,6 +39,23 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps) {
         description: `You now have access to ${agent.name}.`,
     });
     // Here you would typically update user's entitlements.
+  }
+
+  const handleRateAgent = () => {
+    if (userRating === 0) {
+        toast({
+            variant: 'destructive',
+            title: "No rating selected",
+            description: "Please select a star rating before submitting.",
+        })
+        return;
+    }
+    // In a real app, you'd send this rating to your backend.
+    // Here we just show a toast.
+    toast({
+        title: "Rating Submitted",
+        description: `You rated ${agent.name} ${userRating} out of 5 stars. Thank you!`,
+    })
   }
 
   const isPaidAgent = agent.price === 'paid';
@@ -64,6 +85,14 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps) {
               <div className="md:col-span-2">
                   <CardTitle className="text-3xl font-headline">{agent.name}</CardTitle>
                   <CardDescription className="mt-2 text-base">{agent.description}</CardDescription>
+                  <div className="flex items-center gap-2 mt-4">
+                      <div className="flex items-center">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                              <Star key={star} className={cn("h-5 w-5", agent.rating >= star ? "text-yellow-500 fill-yellow-400" : "text-gray-300")} />
+                          ))}
+                      </div>
+                      <p className="text-sm text-muted-foreground">{agent.rating.toFixed(1)} ({agent.ratingCount} ratings)</p>
+                  </div>
               </div>
               <div className="flex flex-col items-start md:items-end gap-2">
                   <SecurityBadge rating={agent.securityRating} showText={true} />
@@ -103,30 +132,52 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps) {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-              <CardTitle>Agent Details</CardTitle>
-              <CardDescription>Additional information and usage statistics.</CardDescription>
-          </CardHeader>
-          <CardContent className="grid md:grid-cols-2 gap-4 text-sm">
-              <div className="flex justify-between border-b pb-2">
-                  <span className="text-muted-foreground">Publisher</span>
-                  <span className="font-medium">{agent.isUserCreated ? "You" : "Community"}</span>
-              </div>
-              <div className="flex justify-between border-b pb-2">
-                  <span className="text-muted-foreground">Version</span>
-                  <span className="font-medium">1.0.0</span>
-              </div>
-               <div className="flex justify-between border-b pb-2">
-                  <span className="text-muted-foreground">Total Runs</span>
-                  <span className="font-medium">1,234</span>
-              </div>
-              <div className="flex justify-between border-b pb-2">
-                  <span className="text-muted-foreground">Last Updated</span>
-                  <span className="font-medium">2 days ago</span>
-              </div>
-          </CardContent>
-        </Card>
+        <div className="grid md:grid-cols-2 gap-8">
+            <Card>
+            <CardHeader>
+                <CardTitle>Agent Details</CardTitle>
+                <CardDescription>Additional information and usage statistics.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-4 text-sm">
+                <div className="flex justify-between border-b pb-2">
+                    <span className="text-muted-foreground">Publisher</span>
+                    <span className="font-medium">{agent.isUserCreated ? "You" : "Community"}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                    <span className="text-muted-foreground">Version</span>
+                    <span className="font-medium">1.0.0</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                    <span className="text-muted-foreground">Total Runs</span>
+                    <span className="font-medium">1,234</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                    <span className="text-muted-foreground">Last Updated</span>
+                    <span className="font-medium">2 days ago</span>
+                </div>
+            </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Rate this Agent</CardTitle>
+                    <CardDescription>Share your experience to help others.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center gap-4">
+                    <div className="flex items-center" onMouseLeave={() => setHoverRating(0)}>
+                         {[1, 2, 3, 4, 5].map((star) => (
+                              <Star 
+                                key={star} 
+                                className={cn("h-8 w-8 cursor-pointer transition-colors", (hoverRating || userRating) >= star ? "text-yellow-500 fill-yellow-400" : "text-gray-300")}
+                                onMouseEnter={() => setHoverRating(star)}
+                                onClick={() => setUserRating(star)}
+                                />
+                          ))}
+                    </div>
+                    <Button className="w-full" onClick={handleRateAgent}>Submit Rating</Button>
+                </CardContent>
+            </Card>
+        </div>
       </div>
     </>
   );

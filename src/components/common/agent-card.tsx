@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Agent } from '@/lib/data';
 import { SecurityBadge } from './security-badge';
-import { ArrowRight, UploadCloud, ShieldCheck, ShieldAlert, Shield, Cpu } from 'lucide-react';
-import React, { useState } from 'react';
+import { ArrowRight, UploadCloud, ShieldCheck, ShieldAlert, Shield, Cpu, Star } from 'lucide-react';
+import React, 'react';
 import {
   Dialog,
   DialogContent,
@@ -32,12 +32,12 @@ interface AgentCardProps {
 }
 
 export function AgentCard({ agent }: AgentCardProps) {
-  const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
-  const [publishType, setPublishType] = useState<'free' | 'paid'>('free');
-  const [price, setPrice] = useState<string>('');
-  const [isLoadingPrice, setIsLoadingPrice] = useState(false);
-  const [isAssessingSecurity, setIsAssessingSecurity] = useState(false);
-  const [securityAssessment, setSecurityAssessment] = useState<AssessAgentSecurityOutput | null>(null);
+  const [isPublishDialogOpen, setIsPublishDialogOpen] = React.useState(false);
+  const [publishType, setPublishType] = React.useState<'free' | 'paid'>('free');
+  const [price, setPrice] = React.useState<string>('');
+  const [isLoadingPrice, setIsLoadingPrice] = React.useState(false);
+  const [isAssessingSecurity, setIsAssessingSecurity] = React.useState(false);
+  const [securityAssessment, setSecurityAssessment] = React.useState<AssessAgentSecurityOutput | null>(null);
   const { toast } = useToast();
   const { updateAgent } = useAgents();
 
@@ -260,7 +260,14 @@ export function AgentCard({ agent }: AgentCardProps) {
         <p className="text-sm text-muted-foreground line-clamp-3">{agent.description}</p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
-        <Badge variant={agent.price === 'free' ? 'secondary' : 'outline'}>{agent.price === 'free' ? 'Free' : 'Paid'}</Badge>
+        <div className="flex items-center gap-2">
+            <Badge variant={agent.price === 'free' ? 'secondary' : 'outline'}>{agent.price === 'free' ? 'Free' : 'Paid'}</Badge>
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <Star className="h-4 w-4 fill-yellow-400 text-yellow-500" />
+                <span>{agent.rating.toFixed(1)}</span>
+                <span className="text-xs">({agent.ratingCount})</span>
+            </div>
+        </div>
         <Button variant="ghost" size="sm" asChild>
           <Link href={`/agent/${agent.id}`}>
             View

@@ -219,16 +219,18 @@ export default function AgentCreationForm() {
 
     setIsPackaging(true);
 
-    const newAgent = {
+    const newAgent: Agent = {
       id: agentName.toLowerCase().replace(/\s+/g, '-'),
       name: agentName,
       description: agentDescription,
-      price: "free" as const,
-      securityRating: "none" as const,
+      price: "free",
+      securityRating: "none",
       imageUrl: 'https://picsum.photos/600/400',
       imageHint: 'abstract technology',
       isUserCreated: true,
       framework: framework ?? undefined,
+      rating: 0,
+      ratingCount: 0,
     };
     await addAgent(newAgent);
 

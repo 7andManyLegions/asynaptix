@@ -53,6 +53,8 @@ export default function MyAgentsPage() {
       imageUrl: 'https://picsum.photos/600/400',
       imageHint: 'custom agent',
       isUserCreated: true,
+      rating: 0,
+      ratingCount: 0,
     };
 
     await addAgent(newAgent);

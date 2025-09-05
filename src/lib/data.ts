@@ -13,6 +13,8 @@ export interface Agent {
   imageHint: string;
   isUserCreated?: boolean;
   framework?: 'LangChain' | 'LlamaIndex' | 'Custom' | 'AutoGen' | 'CrewAI';
+  rating: number;
+  ratingCount: number;
 }
 
 export interface Tool {
@@ -33,6 +35,8 @@ export const initialAgents: Agent[] = [
     imageUrl: "https://picsum.photos/600/400",
     imageHint: "data chart",
     framework: "Custom",
+    rating: 4.5,
+    ratingCount: 120,
   },
   {
     id: "social-media-manager",
@@ -43,6 +47,8 @@ export const initialAgents: Agent[] = [
     imageUrl: "https://picsum.photos/600/400",
     imageHint: "social media",
     framework: "Custom",
+    rating: 4.2,
+    ratingCount: 88,
   },
   {
     id: "code-generator",
@@ -53,6 +59,8 @@ export const initialAgents: Agent[] = [
     imageUrl: "https://picsum.photos/600/400",
     imageHint: "code screen",
     framework: "LangChain",
+    rating: 3.8,
+    ratingCount: 250,
   },
   {
     id: "research-assistant",
@@ -63,6 +71,8 @@ export const initialAgents: Agent[] = [
     imageUrl: "https://picsum.photos/600/400",
     imageHint: "books library",
     framework: "Custom",
+    rating: 4.9,
+    ratingCount: 450,
   },
   {
     id: "personal-finance-bot",
@@ -72,6 +82,8 @@ export const initialAgents: Agent[] = [
     price: "free",
     imageUrl: "https://picsum.photos/600/400",
     imageHint: "money wallet",
+    rating: 3.2,
+    ratingCount: 50,
   },
   {
     id: "travel-planner",
@@ -82,6 +94,8 @@ export const initialAgents: Agent[] = [
     imageUrl: "https://picsum.photos/600/400",
     imageHint: "travel map",
     framework: "LlamaIndex",
+    rating: 4.0,
+    ratingCount: 95,
   },
 ];
 

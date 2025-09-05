@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ShieldCheck, ShieldAlert, Shield, Verified, BadgePercent, Filter, Cpu, Search } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, Shield, Verified, BadgePercent, Filter, Cpu, Search, Star } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -18,6 +18,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Input } from '../ui/input';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 
 const securityFilters: { id: SecurityRating, label: string, icon: React.ElementType }[] = [
   { id: 'trusted', label: 'Trusted Publisher', icon: ShieldCheck },
@@ -36,6 +37,13 @@ const frameworkFilters: {id: NonNullable<Agent['framework']>, label: string}[] =
     { id: 'AutoGen', label: 'AutoGen' },
     { id: 'CrewAI', label: 'CrewAI' },
     { id: 'Custom', label: 'Custom' },
+];
+
+const ratingFilters = [
+    { id: "4", label: "4+ Stars" },
+    { id: "3", label: "3+ Stars" },
+    { id: "2", label: "2+ Stars" },
+    { id: "1", label: "1+ Stars" },
 ]
 
 export default function DiscoverPage() {
@@ -44,6 +52,7 @@ export default function DiscoverPage() {
   const [prices, setPrices] = useState<Set<string>>(new Set());
   const [frameworks, setFrameworks] = useState<Set<string>>(new Set());
   const [searchTerm, setSearchTerm] = useState('');
+  const [minRating, setMinRating] = useState(0);
 
   const handleSecurityChange = (rating: SecurityRating) => {
     setSecurityRatings(prev => {
@@ -87,15 +96,34 @@ export default function DiscoverPage() {
       const securityMatch = securityRatings.size === 0 || securityRatings.has(agent.securityRating);
       const priceMatch = prices.size === 0 || prices.has(agent.price);
       const frameworkMatch = frameworks.size === 0 || (agent.framework && frameworks.has(agent.framework));
+      const ratingMatch = agent.rating >= minRating;
       const searchMatch = searchTerm === '' || 
                           agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           agent.description.toLowerCase().includes(searchTerm.toLowerCase());
-      return securityMatch && priceMatch && frameworkMatch && searchMatch;
+      return securityMatch && priceMatch && frameworkMatch && searchMatch && ratingMatch;
     });
-  }, [securityRatings, prices, frameworks, searchTerm, agents]);
+  }, [securityRatings, prices, frameworks, searchTerm, agents, minRating]);
 
   const FilterContent = () => (
     <div className="space-y-8">
+       <div>
+        <h3 className="mb-4 text-lg font-medium">Minimum Rating</h3>
+        <RadioGroup value={minRating.toString()} onValueChange={(val) => setMinRating(parseInt(val))}>
+            <div className="flex items-center space-x-2">
+                <RadioGroupItem value="0" id="r-any" />
+                <Label htmlFor="r-any">Any</Label>
+            </div>
+            {ratingFilters.map(filter => (
+                <div key={filter.id} className="flex items-center space-x-2">
+                    <RadioGroupItem value={filter.id} id={`r-${filter.id}`} />
+                    <Label htmlFor={`r-${filter.id}`} className="flex items-center gap-2 cursor-pointer">
+                       <Star className="h-4 w-4 text-muted-foreground" />
+                       {filter.label}
+                    </Label>
+                </div>
+            ))}
+        </RadioGroup>
+      </div>
       <div>
         <h3 className="mb-4 text-lg font-medium">Security Rating</h3>
         <div className="space-y-3">
@@ -175,7 +203,7 @@ export default function DiscoverPage() {
                 Filters
               </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent className="overflow-y-auto">
               <SheetHeader>
                 <SheetTitle>Filters</SheetTitle>
                 <SheetDescription>

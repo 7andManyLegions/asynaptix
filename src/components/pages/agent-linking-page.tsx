@@ -144,15 +144,17 @@ export default function AgentLinkingPage() {
       return;
     }
     setIsPackaging(true);
-    const newAgent = {
+    const newAgent: Agent = {
       id: newAgentName.toLowerCase().replace(/\s+/g, '-'),
       name: newAgentName,
       description: newAgentDescription,
-      price: "free" as const,
-      securityRating: "none" as const,
+      price: "free",
+      securityRating: "none",
       imageUrl: 'https://picsum.photos/600/400',
       imageHint: 'abstract nodes',
       isUserCreated: true,
+      rating: 0,
+      ratingCount: 0,
     };
     await addAgent(newAgent);
     setIsPackaging(false);
