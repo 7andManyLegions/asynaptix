@@ -12,7 +12,7 @@ export interface Agent {
   imageUrl: string;
   imageHint: string;
   isUserCreated?: boolean;
-  framework?: 'LangChain' | 'LlamaIndex' | 'Custom';
+  framework?: 'LangChain' | 'LlamaIndex' | 'Custom' | 'AutoGen' | 'CrewAI';
 }
 
 export interface Tool {

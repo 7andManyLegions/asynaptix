@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useState } from 'react';
+import { Agent } from '@/lib/data';
 
 const creationOptions = [
     {
@@ -44,7 +45,7 @@ const creationOptions = [
     }
 ];
 
-const frameworks = [
+const frameworks: {id: Agent['framework'], name: string, description: string, logo: string, isDisabled: boolean}[] = [
     {
         id: 'LangChain',
         name: 'LangChain',
@@ -53,14 +54,14 @@ const frameworks = [
         isDisabled: false,
     },
     {
-        id: 'autogen',
+        id: 'AutoGen',
         name: 'AutoGen',
         description: 'Best for multi-agent conversations.',
         logo: '🤖',
         isDisabled: true,
     },
     {
-        id: 'crewai',
+        id: 'CrewAI',
         name: 'CrewAI',
         description: 'Best for role-playing, autonomous agent teams.',
         logo: '🧑‍🤝‍🧑',
@@ -79,7 +80,7 @@ export default function AgentBuilderHubPage() {
     const router = useRouter();
     const [isFrameworkDialogOpen, setIsFrameworkDialogOpen] = useState(false);
 
-    const handleFrameworkSelect = (frameworkId: string) => {
+    const handleFrameworkSelect = (frameworkId: Agent['framework']) => {
         const template = `
 // Example of a LangChain agent using a simple chain.
 // This requires 'langchain' to be installed.
@@ -113,7 +114,7 @@ async function run(input: { input: string }) {
 // run({ input: "What is the capital of France?" });
 `;
         sessionStorage.setItem('agentTemplate', template);
-        sessionStorage.setItem('agentFramework', frameworkId);
+        sessionStorage.setItem('agentFramework', frameworkId as string);
         setIsFrameworkDialogOpen(false);
         router.push('/build/new');
     }
