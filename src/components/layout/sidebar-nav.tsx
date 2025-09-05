@@ -7,7 +7,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { LayoutGrid, Wrench, Package, Link2, CaseUpper, FolderKanban, KeyRound } from 'lucide-react';
+import { LayoutGrid, Wrench, Package, Link2, CaseUpper, FolderKanban, KeyRound, TrendingUp } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 
 const navItems = [
@@ -16,6 +16,7 @@ const navItems = [
   { href: '/build', label: 'Agent Builder', icon: Wrench, auth: false },
   { href: '/link-agents', label: 'Link Agents', icon: Link2, auth: true },
   { href: '/my-agents', label: 'My Agents', icon: FolderKanban, auth: true },
+  { href: '/entrepreneurs', label: 'Entrepreneurs', icon: TrendingUp, auth: true },
   { href: '/api-keys', label: 'API Keys', icon: KeyRound, auth: true },
 ];
 

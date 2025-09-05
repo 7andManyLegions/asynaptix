@@ -2,13 +2,13 @@
 "use client";
 
 import { useState, useMemo } from 'react';
-import { useAgents, type SecurityRating } from '@/hooks/use-agents.tsx';
+import { useAgents, type SecurityRating, type Agent } from '@/hooks/use-agents.tsx';
 import { AgentCard } from '@/components/common/agent-card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ShieldCheck, ShieldAlert, Shield, Verified, BadgePercent, Filter } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, Shield, Verified, BadgePercent, Filter, Cpu } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -25,15 +25,23 @@ const securityFilters: { id: SecurityRating, label: string, icon: React.ElementT
 ];
 
 const priceFilters = [
-    { id: 'free', label: 'Free', icon: BadgePercent },
-    { id: 'paid', label: 'Paid', icon: BadgePercent },
+    { id: 'free', label: 'Free' },
+    { id: 'paid', label: 'Paid' },
 ];
 
+const frameworkFilters: {id: NonNullable<Agent['framework']>, label: string}[] = [
+    { id: 'LangChain', label: 'LangChain' },
+    { id: 'LlamaIndex', label: 'LlamaIndex' },
+    { id: 'AutoGen', label: 'AutoGen' },
+    { id: 'CrewAI', label: 'CrewAI' },
+    { id: 'Custom', label: 'Custom' },
+]
 
 export default function HomePage() {
   const { agents } = useAgents();
   const [securityRatings, setSecurityRatings] = useState<Set<SecurityRating>>(new Set());
   const [prices, setPrices] = useState<Set<string>>(new Set());
+  const [frameworks, setFrameworks] = useState<Set<string>>(new Set());
 
   const handleSecurityChange = (rating: SecurityRating) => {
     setSecurityRatings(prev => {
@@ -58,18 +66,31 @@ export default function HomePage() {
       return newSet;
     });
   };
+  
+  const handleFrameworkChange = (framework: string) => {
+    setFrameworks(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(framework)) {
+        newSet.delete(framework);
+      } else {
+        newSet.add(framework);
+      }
+      return newSet;
+    });
+  };
 
   const filteredAgents = useMemo(() => {
     const communityAgents = agents.filter(agent => !agent.isUserCreated);
     return communityAgents.filter(agent => {
       const securityMatch = securityRatings.size === 0 || securityRatings.has(agent.securityRating);
       const priceMatch = prices.size === 0 || prices.has(agent.price);
-      return securityMatch && priceMatch;
+      const frameworkMatch = frameworks.size === 0 || (agent.framework && frameworks.has(agent.framework));
+      return securityMatch && priceMatch && frameworkMatch;
     });
-  }, [securityRatings, prices, agents]);
+  }, [securityRatings, prices, frameworks, agents]);
 
   const FilterContent = () => (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h3 className="mb-4 text-lg font-medium">Security Rating</h3>
         <div className="space-y-3">
@@ -103,13 +124,31 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+       <div>
+        <h3 className="mb-4 text-lg font-medium">Framework</h3>
+        <div className="space-y-3">
+          {frameworkFilters.map(filter => (
+            <div key={filter.id} className="flex items-center space-x-2">
+              <Checkbox
+                id={`framework-${filter.id}`}
+                checked={frameworks.has(filter.id)}
+                onCheckedChange={() => handleFrameworkChange(filter.id)}
+              />
+              <Label htmlFor={`framework-${filter.id}`} className="flex items-center gap-2 cursor-pointer">
+                <Cpu className="h-4 w-4 text-muted-foreground" />
+                {filter.label}
+              </Label>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 
   return (
     <main>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold tracking-tight font-headline">Discover Agents</h1>
+        <h1 className="text-3xl font-bold tracking-tight font-headline">Discover Capabilities</h1>
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline">
