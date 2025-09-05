@@ -85,6 +85,8 @@ export default function AgentCreationForm() {
      const selectedFramework = sessionStorage.getItem('agentFramework') as Agent['framework'];
     if (selectedFramework) {
         setFramework(selectedFramework);
+        setAgentName(`${selectedFramework} Agent`);
+        setAgentDescription(`A new agent built with the ${selectedFramework} framework.`);
         sessionStorage.removeItem('agentFramework');
     }
   }, []);
@@ -93,8 +95,7 @@ export default function AgentCreationForm() {
     try {
       localStorage.setItem('apiKeys', JSON.stringify(keys));
       setApiKeys(keys);
-    } catch (error) {
-      console.error("Failed to save API keys to localStorage", error);
+    } catch (error)      console.error("Failed to save API keys to localStorage", error);
     }
   };
   

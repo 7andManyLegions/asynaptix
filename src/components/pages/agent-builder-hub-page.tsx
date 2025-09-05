@@ -83,13 +83,14 @@ export default function AgentBuilderHubPage() {
     const handleFrameworkSelect = (frameworkId: Agent['framework']) => {
         const template = `
 // Example of a LangChain agent using a simple chain.
-// This requires 'langchain' to be installed.
+// This requires 'langchain' and '@langchain/openai' to be installed.
 
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
 // 1. Set up the model and prompt
+// Make sure your OPENAI_API_KEY is set in your environment variables.
 const model = new ChatOpenAI({});
 const prompt = ChatPromptTemplate.fromMessages([
     ["system", "You are a helpful assistant."],
@@ -98,7 +99,7 @@ const prompt = ChatPromptTemplate.fromMessages([
 const outputParser = new StringOutputParser();
 
 // 2. Create the chain
-const chain = prompt.connect(model).pipe(outputParser);
+const chain = prompt.pipe(model).pipe(outputParser);
 
 // 3. Define the agent's execution logic
 async function run(input: { input: string }) {
@@ -110,7 +111,7 @@ async function run(input: { input: string }) {
     return result;
 }
 
-// Example invocation (for testing)
+// Example of how to run the agent:
 // run({ input: "What is the capital of France?" });
 `;
         sessionStorage.setItem('agentTemplate', template);
