@@ -1,186 +1,133 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
-import { useAgents, type SecurityRating, type Agent } from '@/hooks/use-agents.tsx';
-import { AgentCard } from '@/components/common/agent-card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ShieldCheck, ShieldAlert, Shield, Verified, BadgePercent, Filter, Cpu } from 'lucide-react';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowRight, Bot, Link2, Puzzle } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const securityFilters: { id: SecurityRating, label: string, icon: React.ElementType }[] = [
-  { id: 'trusted', label: 'Trusted Publisher', icon: ShieldCheck },
-  { id: 'verified', label: 'Verified Publisher', icon: Verified },
-  { id: 'scanned', label: 'Scanned', icon: Shield },
-];
-
-const priceFilters = [
-    { id: 'free', label: 'Free' },
-    { id: 'paid', label: 'Paid' },
-];
-
-const frameworkFilters: {id: NonNullable<Agent['framework']>, label: string}[] = [
-    { id: 'LangChain', label: 'LangChain' },
-    { id: 'LlamaIndex', label: 'LlamaIndex' },
-    { id: 'AutoGen', label: 'AutoGen' },
-    { id: 'CrewAI', label: 'CrewAI' },
-    { id: 'Custom', label: 'Custom' },
+const features = [
+  {
+    icon: Bot,
+    title: 'Build Autonomous Agents',
+    description: 'Use our AI-powered Agent Builder to create sophisticated agents from scratch or with the help of frameworks like LangChain.',
+    link: '/build',
+    linkText: 'Start Building',
+  },
+  {
+    icon: Link2,
+    title: 'Link Agents for Complex Tasks',
+    description: 'Combine the capabilities of multiple agents to create powerful, multi-step workflows with our intuitive Linking Assistant.',
+    link: '/link-agents',
+    linkText: 'Link Agents',
+  },
+  {
+    icon: Puzzle,
+    title: 'Discover Tools & Plugins',
+    description: 'Enhance your agents by integrating pre-built tools for web search, data analysis, API connections, and more.',
+    link: '/marketplace',
+    linkText: 'Browse Marketplace',
+  },
 ]
 
 export default function HomePage() {
-  const { agents } = useAgents();
-  const [securityRatings, setSecurityRatings] = useState<Set<SecurityRating>>(new Set());
-  const [prices, setPrices] = useState<Set<string>>(new Set());
-  const [frameworks, setFrameworks] = useState<Set<string>>(new Set());
-
-  const handleSecurityChange = (rating: SecurityRating) => {
-    setSecurityRatings(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(rating)) {
-        newSet.delete(rating);
-      } else {
-        newSet.add(rating);
-      }
-      return newSet;
-    });
-  };
-
-  const handlePriceChange = (price: string) => {
-    setPrices(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(price)) {
-        newSet.delete(price);
-      } else {
-        newSet.add(price);
-      }
-      return newSet;
-    });
-  };
-  
-  const handleFrameworkChange = (framework: string) => {
-    setFrameworks(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(framework)) {
-        newSet.delete(framework);
-      } else {
-        newSet.add(framework);
-      }
-      return newSet;
-    });
-  };
-
-  const filteredAgents = useMemo(() => {
-    const communityAgents = agents.filter(agent => !agent.isUserCreated);
-    return communityAgents.filter(agent => {
-      const securityMatch = securityRatings.size === 0 || securityRatings.has(agent.securityRating);
-      const priceMatch = prices.size === 0 || prices.has(agent.price);
-      const frameworkMatch = frameworks.size === 0 || (agent.framework && frameworks.has(agent.framework));
-      return securityMatch && priceMatch && frameworkMatch;
-    });
-  }, [securityRatings, prices, frameworks, agents]);
-
-  const FilterContent = () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="mb-4 text-lg font-medium">Security Rating</h3>
-        <div className="space-y-3">
-          {securityFilters.map(filter => (
-            <div key={filter.id} className="flex items-center space-x-2">
-              <Checkbox
-                id={`security-${filter.id}`}
-                checked={securityRatings.has(filter.id)}
-                onCheckedChange={() => handleSecurityChange(filter.id)}
-              />
-              <Label htmlFor={`security-${filter.id}`} className="flex items-center gap-2 cursor-pointer">
-                <filter.icon className="h-4 w-4 text-muted-foreground" />
-                {filter.label}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div>
-        <h3 className="mb-4 text-lg font-medium">Price</h3>
-        <div className="space-y-3">
-          {priceFilters.map(filter => (
-            <div key={filter.id} className="flex items-center space-x-2">
-              <Checkbox
-                id={`price-${filter.id}`}
-                checked={prices.has(filter.id)}
-                onCheckedChange={() => handlePriceChange(filter.id)}
-              />
-              <Label htmlFor={`price-${filter.id}`} className="cursor-pointer">{filter.label}</Label>
-            </div>
-          ))}
-        </div>
-      </div>
-       <div>
-        <h3 className="mb-4 text-lg font-medium">Framework</h3>
-        <div className="space-y-3">
-          {frameworkFilters.map(filter => (
-            <div key={filter.id} className="flex items-center space-x-2">
-              <Checkbox
-                id={`framework-${filter.id}`}
-                checked={frameworks.has(filter.id)}
-                onCheckedChange={() => handleFrameworkChange(filter.id)}
-              />
-              <Label htmlFor={`framework-${filter.id}`} className="flex items-center gap-2 cursor-pointer">
-                <Cpu className="h-4 w-4 text-muted-foreground" />
-                {filter.label}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
   return (
-    <main>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold tracking-tight font-headline">Discover Capabilities</h1>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" />
-              Filters
+    <div className="space-y-12 md:space-y-20">
+      {/* Hero Section */}
+      <section className="text-center">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight font-headline">
+            The Platform for Autonomous AI
+          </h1>
+          <p className="mt-4 md:mt-6 max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground">
+            Asynaptix provides the tools to build, link, and deploy sophisticated AI agents that can reason, plan, and execute complex tasks.
+          </p>
+          <div className="mt-8 flex justify-center gap-4">
+            <Button size="lg" asChild>
+              <Link href="/build">
+                Get Started
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Filters</SheetTitle>
-              <SheetDescription>
-                Refine the list of agents based on your criteria.
-              </SheetDescription>
-            </SheetHeader>
-            <div className="py-4">
-              <FilterContent />
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredAgents.length > 0 ? (
-          filteredAgents.map(agent => (
-            <AgentCard key={agent.id} agent={agent} />
-          ))
-        ) : (
-          <div className="col-span-full text-center py-12">
-            <p className="text-muted-foreground">No agents match the current filters.</p>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/discover">
+                Discover Agents
+              </Link>
+            </Button>
           </div>
-        )}
-      </div>
-    </main>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map((feature) => (
+            <Card key={feature.title} className="flex flex-col text-center items-center p-6 transform transition-all hover:scale-105 hover:shadow-xl">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
+                <feature.icon className="h-8 w-8 text-primary" />
+              </div>
+              <CardTitle className="mb-2 text-xl font-semibold">{feature.title}</CardTitle>
+              <CardDescription className="flex-grow">{feature.description}</CardDescription>
+              <Button variant="ghost" className="mt-4" asChild>
+                <Link href={feature.link}>
+                  {feature.linkText}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="container mx-auto px-4">
+        <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold font-headline">A New Paradigm for AI</h2>
+            <p className="mt-3 max-w-2xl mx-auto text-lg text-muted-foreground">Go beyond simple chatbots. Build systems that work for you.</p>
+        </div>
+        <div className="grid md:grid-cols-2 items-center gap-12">
+            <div>
+                <Image 
+                    src="https://picsum.photos/1200/800"
+                    alt="Agent linking diagram"
+                    width={1200}
+                    height={800}
+                    className="rounded-xl shadow-2xl"
+                    data-ai-hint="flowchart diagram"
+                />
+            </div>
+            <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0 mt-1">
+                        <span className="text-xl font-bold text-primary">1</span>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-semibold">Define a Goal</h3>
+                        <p className="text-muted-foreground">Describe the task you want to accomplish in natural language. The AI orchestrator breaks it down into steps.</p>
+                    </div>
+                </div>
+                 <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0 mt-1">
+                        <span className="text-xl font-bold text-primary">2</span>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-semibold">Assemble the Team</h3>
+                        <p className="text-muted-foreground">The system automatically selects and links the best agents and tools from the marketplace for each step of the plan.</p>
+                    </div>
+                </div>
+                 <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0 mt-1">
+                        <span className="text-xl font-bold text-primary">3</span>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-semibold">Execute & Learn</h3>
+                        <p className="text-muted-foreground">The agentic workflow runs, adapting to new information and refining its approach until the goal is achieved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+    </div>
   );
 }
