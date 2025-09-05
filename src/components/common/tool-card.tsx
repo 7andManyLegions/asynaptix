@@ -20,7 +20,7 @@ export function ToolCard({ tool, onAdd }: ToolCardProps) {
             onAdd(tool);
         } else {
              toast({
-                title: "Tool Added",
+                title: `${tool.type === 'plugin' ? 'Plugin' : 'Tool'} Added`,
                 description: `${tool.name} has been added to your agent.`,
             });
         }
@@ -35,7 +35,7 @@ export function ToolCard({ tool, onAdd }: ToolCardProps) {
         <div className="flex-1">
           <CardTitle className="text-base font-semibold font-headline">{tool.name}</CardTitle>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="mt-1">{tool.category}</Badge>
+            <Badge variant="outline" className="mt-1">{tool.type === 'plugin' ? 'Plugin' : tool.category}</Badge>
             {tool.isOfficial && <Badge variant="secondary" className="mt-1">Official</Badge>}
           </div>
         </div>
@@ -44,19 +44,10 @@ export function ToolCard({ tool, onAdd }: ToolCardProps) {
         <p className="text-sm text-muted-foreground">{tool.description}</p>
       </CardContent>
       <CardFooter>
-        {tool.type === 'plugin' ? (
-          <Button className="w-full" variant="outline" asChild>
-              <Link href="/build">
-                <ArrowRight className="mr-2 h-4 w-4" />
-                Use Framework
-              </Link>
-          </Button>
-        ) : (
           <Button className="w-full" variant="outline" onClick={handleAddClick}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Add to Agent
           </Button>
-        )}
       </CardFooter>
     </Card>
   );

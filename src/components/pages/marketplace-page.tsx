@@ -1,10 +1,11 @@
+
 "use client";
 
 import { useState, useMemo } from 'react';
 import { tools, type Tool } from '@/lib/data';
 import { ToolCard } from '@/components/common/tool-card';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Wand2, Loader2, Save, CaseUpper } from 'lucide-react';
+import { Search, Plus, Wand2, Loader2, Save, CaseUpper, Info } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
@@ -14,6 +15,12 @@ import { Switch } from '../ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { suggestToolCode } from '@/ai/flows/tool-code-suggestion';
 import Link from 'next/link';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 
 export default function MarketplacePage() {
@@ -95,9 +102,25 @@ export default function MarketplacePage() {
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight font-headline">Marketplace</h1>
-          <p className="text-muted-foreground mt-2">Enhance your agents with powerful Tools and framework Plugins.</p>
+        <div className="flex items-center gap-2">
+            <h1 className="text-3xl font-bold tracking-tight font-headline">Marketplace</h1>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground">
+                            <Info className="h-4 w-4" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                        <p className="font-bold text-base">Tools vs. Plugins</p>
+                        <p className="text-sm mt-1 text-muted-foreground">
+                            <strong>Tools</strong> are single functions an agent can use (e.g., a calculator).
+                            <br/><br/>
+                            <strong>Plugins</strong> are bundles of related tools for a specific service (e.g., a Google Workspace plugin with tools for Docs, Sheets, and Calendar).
+                        </p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
         </div>
         <div className="flex gap-2">
             <Button variant="outline" onClick={() => setShowCreateForm(!showCreateForm)}>
@@ -112,6 +135,8 @@ export default function MarketplacePage() {
             </Button>
         </div>
       </div>
+       <p className="text-muted-foreground -mt-6">Enhance your agents with powerful Tools and framework Plugins.</p>
+
 
        {showCreateForm && (
         <Card className="animate-in fade-in-50">
@@ -192,7 +217,7 @@ export default function MarketplacePage() {
 
       <div className="space-y-8">
         <div>
-            <h2 className="text-2xl font-semibold font-headline tracking-tight mb-4">Framework Plugins</h2>
+            <h2 className="text-2xl font-semibold font-headline tracking-tight mb-4">Plugins</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {plugins.length > 0 ? (
                 plugins.map(tool => (

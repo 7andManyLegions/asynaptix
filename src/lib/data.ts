@@ -102,10 +102,10 @@ export const initialAgents: Agent[] = [
 ];
 
 export const tools: Tool[] = [
-  {
-    id: "langchain-plugin",
-    name: "LangChain Plugin",
-    description: "Integrate agents and tools built with the LangChain framework.",
+    {
+    id: "g-suite-plugin",
+    name: "G-Suite Plugin",
+    description: "A plugin that provides a suite of tools for interacting with Google Workspace (Docs, Sheets, etc.).",
     icon: Bot,
     category: "Community",
     type: "plugin",
